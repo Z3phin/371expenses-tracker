@@ -43,6 +43,8 @@ class Category {
         Item& getItem(const std::string _identifier) const;
 
         double getSum() const noexcept;  
+
+        bool deleteItem(const std::string &_identifier);
 };
 
 #endif // CATEGORY_H

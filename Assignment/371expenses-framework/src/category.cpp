@@ -105,12 +105,13 @@ void mergeTags(Item &target, const Item &other) {
     for (const std::string& tag : otherTags) {
         target.addTag(tag);
     }
-
-    delete &otherTags;
 }
 
 bool Category::addItem(Item &item) noexcept {
-    const auto result = itemMap.emplace(std::make_pair(item.getIdent(), &item));
+    Item* pNewItem = new Item(item.getIdent(), item.getDescription(), item.getAmount(), item.getDate());
+    mergeTags(*pNewItem, item);
+
+    const auto result = itemMap.emplace(std::make_pair(item.getIdent(), pNewItem));
 
     if (!result.second) {
         auto pair = *result.first;
@@ -157,7 +158,7 @@ Item& Category::getItem(const std::string identifier) const {
 //  auto sum = cObj.getSum() // 3.0
 double Category::getSum() const noexcept {
     double sum;
-    for (auto pair: itemMap) {
+    for (const auto pair: itemMap) {
         Item* pItem = pair.second;
         sum += pItem->getAmount();
     }
@@ -173,6 +174,17 @@ double Category::getSum() const noexcept {
 //  Category cObj{"categoryIdent"};
 //  cObj.newItem("newItemName");
 //  bool result = cObj.deleteItem("newItemName");
+bool Category::deleteItem(const std::string &_identifier) {
+    auto it = itemMap.find(_identifier);
+    if (it == itemMap.end()) {
+        throw std::out_of_range(_identifier + " does not exist in Category " + this->getIdent());
+    }
+
+    Item* pItem = it->second;
+    delete pItem; 
+    itemMap.erase(it);
+    return true; 
+}
 
 
 // TODO Write an == operator overload for the Category class, such that two
