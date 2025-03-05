@@ -62,7 +62,7 @@ class Item {
         /// @return Date object belonging to this item
         Date getDate() const noexcept;
 
-        std::vector<std::string>& getTags() const noexcept;
+        std::vector<std::string> getTags() const noexcept;
 
         // ------------------------------------------------
         //                      Setters
