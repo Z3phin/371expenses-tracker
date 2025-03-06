@@ -46,7 +46,7 @@ std::string Item::getIdent() const noexcept {
 /// @brief Returns the description of this item.
 /// @return the description of this item. 
 std::string Item::getDescription() const noexcept {
-    return this->identifier;
+    return this->description;
 }
 
 /// @brief Returns the amount for this Item.
