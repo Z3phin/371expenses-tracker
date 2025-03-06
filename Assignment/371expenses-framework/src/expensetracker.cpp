@@ -13,13 +13,27 @@
 #include <string>
 #include <utility>
 
-// TODO Write a ExpenseTracker constructor that takes no parameters and constructs an
+
+
+// ------------------------------------------------
+//                  Constructor
+// ------------------------------------------------
+
+// An ExpenseTracker constructor that takes no parameters and constructs an
 //  an ExpenseTracker object
 //
 // Example:
 //  ExpenseTracker etObj{};
+
+/// @brief Constructs an ExpenseTracker object
 ExpenseTracker::ExpenseTracker() : categoryMap({}) {}
 
+
+// ------------------------------------------------
+//                  Deconstructor
+// ------------------------------------------------
+
+/// @brief Desconstructs the ExpenseTracker object
 ExpenseTracker::~ExpenseTracker() {
     for (auto it = categoryMap.begin(); it != categoryMap.end(); it++) {
         delete it->second;

@@ -22,7 +22,19 @@ class ExpenseTracker {
     private:
         std::map<std::string, Category*> categoryMap;
     public: 
+
+        // ------------------------------------------------
+        //                  Constructor
+        // ------------------------------------------------
+
+        /// @brief Constructs an ExpenseTracker object
         ExpenseTracker();
+
+        // ------------------------------------------------
+        //                  Deconstructor
+        // ------------------------------------------------
+
+        /// @brief Desconstructs the ExpenseTracker object
         ~ExpenseTracker();
 
 };
