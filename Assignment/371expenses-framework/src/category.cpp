@@ -23,6 +23,7 @@ Category::~Category() {
     // Delete all the pointers to items contained in the map.
     for (auto it = itemMap.begin(); it != itemMap.end(); it++) {
         delete it->second;
+        it->second = nullptr;
     }
 }
 
@@ -192,6 +193,7 @@ bool Category::deleteItem(const std::string &_identifier) {
     }
 
     delete it->second; // Delete item pointer
+    it->second = nullptr; 
     itemMap.erase(it);
     return true; 
 }
