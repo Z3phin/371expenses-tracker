@@ -125,7 +125,7 @@ bool Category::addItem(const Item &item) noexcept {
         itemMap.emplace(std::make_pair(item.getIdent(), pNewItem));
     }
 
-    return contains;
+    return !contains;
 }
 
 // TODO Write a function, getItem, that takes one parameter, an Item identifier
