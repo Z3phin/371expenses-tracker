@@ -111,7 +111,7 @@ class Item {
 
         /// @brief Returns a std::string of the JSON representation of the data in this Item in the format:
         /// 
-        /// {"identifier":{"amount": xx.xx,"date":YYYY-MM-DD,"description":xxxxxxx,"tags":["tag","tag1",...,"tagN"]}
+        /// {"amount": xx.xx,"date":YYYY-MM-DD,"description":xxxxxxx,"tags":["tag","tag1",...,"tagN"]}
         ///
         /// @return std::string of the JSON representation of the data in this Item.
         std::string str() const noexcept; 
