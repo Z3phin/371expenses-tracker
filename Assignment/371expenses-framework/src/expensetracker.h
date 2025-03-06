@@ -44,6 +44,22 @@ class ExpenseTracker {
         /// @brief Returns the size (number of categories) of the ExpenseTracker object. 
         /// @return number of categories.
         unsigned int size() const noexcept;
+
+        // ------------------------------------------------
+        //               Category Operations
+        // ------------------------------------------------ 
+
+        // ------------------------------------------------
+        //               JSON File Operations
+        // ------------------------------------------------ 
+
+        // ------------------------------------------------
+        //               Operator Functions
+        // ------------------------------------------------ 
+
+        // ------------------------------------------------
+        //               JSON Representation
+        // ------------------------------------------------
 };
 
 #endif // EXPENSETRACKER_H

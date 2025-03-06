@@ -59,6 +59,10 @@ unsigned int ExpenseTracker::size() const noexcept {
 }
 
 
+// ------------------------------------------------
+//               Category Operations
+// ------------------------------------------------ 
+
 // TODO Write a function, newCategory, that takes one parameter, a category
 //  identifier, and returns the Category object as a reference. If an object
 //  with the same identifier already exists, then the existing object should be
@@ -113,6 +117,10 @@ unsigned int ExpenseTracker::size() const noexcept {
 //  cObj2.newItem("newItemName3", "Description", "3.0", Date(2024,12,25));
 //  cObj2.newItem("newItemName4", "Description", "4.0", Date(2024,12,25));
 //  auto sum = ejObj.getSum() // 10.0
+
+// ------------------------------------------------
+//               JSON File Operations
+// ------------------------------------------------ 
 
 // TODO Write a function, load, that takes one parameter, a std::string,
 //  containing the filename for the database. Open the file, read the contents,
@@ -188,6 +196,10 @@ unsigned int ExpenseTracker::size() const noexcept {
 //  ...
 //  etObj.save("database.json");
 
+// ------------------------------------------------
+//               Operator Functions
+// ------------------------------------------------ 
+
 // TODO Write an == operator overload for the ExpenseTracker class, such that two
 //  ExpenseTracker objects are equal only if they have the exact same data.
 //
@@ -197,6 +209,10 @@ unsigned int ExpenseTracker::size() const noexcept {
 //  if(etObj1 == etObj2) {
 //    ...
 //  }
+
+// ------------------------------------------------
+//               JSON Representation
+// ------------------------------------------------ 
 
 // TODO Write a function, str, that takes no parameters and returns a
 //  std::string of the JSON representation of the data in the ExpenseTracker.
