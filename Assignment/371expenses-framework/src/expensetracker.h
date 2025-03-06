@@ -78,6 +78,11 @@ class ExpenseTracker {
         /// @throws std::out_of_range exception if the given category identifier could not be found.
         bool deleteCategory(const std::string &categoryIdentifier);
 
+        /// @brief Returns the sum of all category expense sums, consisting of all individual 
+        /// item amounts across all categories
+        /// @return sum of all items across all categories. Returns 0 if there are no items. 
+        double getSum() const noexcept;
+
         // ------------------------------------------------
         //               JSON File Operations
         // ------------------------------------------------ 

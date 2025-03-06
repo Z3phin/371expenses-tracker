@@ -197,6 +197,17 @@ bool ExpenseTracker::deleteCategory(const std::string &categoryIdentifier) {
 //  cObj2.newItem("newItemName4", "Description", "4.0", Date(2024,12,25));
 //  auto sum = ejObj.getSum() // 10.0
 
+/// @brief Returns the sum of all category expense sums, consisting of all individual 
+/// item amounts across all categories
+/// @return sum of all items across all categories. Returns 0 if there are no items. 
+double ExpenseTracker::getSum() const noexcept {
+    double sum = 0; 
+    for (auto it = categoryMap.cbegin(); it != categoryMap.cend(); it++) {
+        sum += it->second->getSum();
+    }
+    return sum; 
+}
+
 // ------------------------------------------------
 //               JSON File Operations
 // ------------------------------------------------ 
