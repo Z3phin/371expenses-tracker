@@ -14,7 +14,16 @@
 #ifndef EXPENSETRACKER_H
 #define EXPENSETRACKER_H
 
+#include "category.h"
+#include <string>
+#include <map>
+
 class ExpenseTracker {
+    private:
+        std::map<std::string, Category*> categoryMap;
+    public: 
+        ExpenseTracker();
+        ~ExpenseTracker();
 
 };
 

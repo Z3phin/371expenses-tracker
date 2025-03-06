@@ -18,6 +18,14 @@
 //
 // Example:
 //  ExpenseTracker etObj{};
+ExpenseTracker::ExpenseTracker() : categoryMap({}) {}
+
+ExpenseTracker::~ExpenseTracker() {
+    for (auto it = categoryMap.begin(); it != categoryMap.end(); it++) {
+        delete it->second;
+        it->second = nullptr;
+    }
+}
 
 // TODO Write a function, size, that takes no parameters and returns an unsigned
 //  int of the number of categories the ExpenseTracker contains.
