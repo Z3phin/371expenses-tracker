@@ -126,14 +126,14 @@ class Item {
         /// @param lhs left hand side item.
         /// @param rhs right hand side item.
         /// @return True if lhs identifier, date, amount and tags are the same as rhs. Otherwise false.
-        friend bool operator==(Item& lhs, Item& rhs) noexcept;
+        friend bool operator==(const Item& lhs, const Item& rhs) noexcept;
 
         /// @brief Compares two Item objects. 
         ///        Two Item objects are equal only if they have the same identifier, date, amount, description, and tags.
         /// @param lhs left hand side item.
         /// @param rhs right hand side item.
         /// @return True if lhs identifier, date, amount and tags are the same as rhs. Otherwise false.
-        friend bool operator!=(Item& lhs, Item& rhs) noexcept;
+        friend bool operator!=(const Item& lhs, const Item& rhs) noexcept;
         
 };
 

@@ -172,7 +172,7 @@ std::string Item::str() const noexcept {
 /// @param lhs left hand side item.
 /// @param rhs right hand side item.
 /// @return True if lhs identifier, date, amount and tags are the same as rhs. Otherwise false.
-bool operator==(Item& lhs, Item& rhs) noexcept {
+bool operator==(const Item& lhs, const Item& rhs) noexcept {
     return (lhs.identifier == rhs.identifier
             && lhs.date == rhs.date
             && lhs.amount == rhs.amount
@@ -184,7 +184,7 @@ bool operator==(Item& lhs, Item& rhs) noexcept {
 /// @param lhs left hand side item.
 /// @param rhs right hand side item.
 /// @return True if lhs identifier, date, amount and tags are the same as rhs. Otherwise false.
-bool operator!=(Item& lhs, Item& rhs) noexcept {
+bool operator!=(const Item& lhs, const Item& rhs) noexcept {
     return !(lhs == rhs);
 }
 
