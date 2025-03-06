@@ -79,9 +79,9 @@ Item& Category::newItem(const std::string &_identifier,
 
             return *pair.second;
 
-        } catch (std::exception) {
+        } catch (const std::exception &ex) {
             delete pNewItem; // necessary? could this cause issues
-            throw std::runtime_error("Something went wrong");
+            throw std::runtime_error(ex.what());
         }
 
 }
@@ -107,23 +107,24 @@ void mergeTags(Item &target, const Item &other) {
     }
 }
 
-bool Category::addItem(Item &item) noexcept {
-    Item* pNewItem = new Item(item.getIdent(), item.getDescription(), item.getAmount(), item.getDate());
-    mergeTags(*pNewItem, item);
+bool Category::addItem(const Item &item) noexcept {
 
-    const auto result = itemMap.emplace(std::make_pair(item.getIdent(), pNewItem));
-
-    if (!result.second) {
-        auto pair = *result.first;
-        auto pItem = pair.second; 
+    auto it = itemMap.find(item.getIdent());
+    bool contains = it != itemMap.end();
+    if (contains) {
+        auto pItem = it->second; 
 
         mergeTags(*pItem, item);
         pItem->setDescription(item.getDescription());
         pItem->setAmount(item.getAmount());
         pItem->setDate(item.getDate());
+    } else {
+        Item* pNewItem = new Item(item);
+        mergeTags(*pNewItem, item);
+        itemMap.emplace(std::make_pair(item.getIdent(), pNewItem));
     }
 
-    return result.second;
+    return contains;
 }
 
 // TODO Write a function, getItem, that takes one parameter, an Item identifier
@@ -198,6 +199,25 @@ bool Category::deleteItem(const std::string &_identifier) {
 //  if(cObj1 == cObj2) {
 //    ...
 //  }
+
+bool operator==(const Category &lhs, const Category &rhs) noexcept {
+    if (lhs.ident != rhs.ident) return false;
+    if (lhs.size() != rhs.size()) return false; 
+    for (auto pair : lhs.itemMap) {
+        Item lItem = *pair.second;
+        
+        auto result = rhs.itemMap.find(lItem.getIdent());
+        if (result == rhs.itemMap.end()) return false;
+        
+        Item rItem = rhs.getItem(lItem.getIdent());
+        if (rItem != lItem) return false; 
+
+    }
+
+    return true; 
+}
+
+
 
 // TODO Write a function, str, that takes no parameters and returns a
 // std::string of the JSON representation of the data in the Category.

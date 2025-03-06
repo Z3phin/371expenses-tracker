@@ -38,13 +38,15 @@ class Category {
                       const double &_amount,
                       const Date &_date);
 
-        bool addItem(Item &_item) noexcept;
+        bool addItem(const Item &_item) noexcept;
 
         Item& getItem(const std::string _identifier) const;
 
         double getSum() const noexcept;  
 
         bool deleteItem(const std::string &_identifier);
+
+        friend bool operator==(const Category &lhs, const Category &rhs) noexcept;
 };
 
 #endif // CATEGORY_H
