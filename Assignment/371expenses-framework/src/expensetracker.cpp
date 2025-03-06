@@ -140,6 +140,21 @@ bool ExpenseTracker::addCategory(const Category &category) {
 //  etObj.newCategory("categoryIdent");
 //  auto cObj = etObj.getCategory("categoryIdent");
 
+/// @brief Returns the category with the given identifier only if it is in the 
+/// ExpenseTracker object. 
+/// @param categoryIdentifier category to be found  
+/// @return Reference to category object with matching identifier
+/// @throws std::out_of_range exception if the category is not in the ExpenseTracker
+Category& ExpenseTracker::getCategory(const std::string &categoryIdentifier) const {
+    const auto it = categoryMap.find(categoryIdentifier);
+    if (it == categoryMap.cend()) {
+        throw std::out_of_range(categoryIdentifier + " was not found in ExpenseTracker object");
+    }   
+
+    return *(it->second);
+}
+
+
 // TODO Write a function, deleteCategory, that takes one parameter, a Category
 //  identifier, and deletes that catagory from the container, and returns true
 //  if the Category was deleted. If no Category exists, throw an appropriate

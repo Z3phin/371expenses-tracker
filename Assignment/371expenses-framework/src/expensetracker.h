@@ -62,7 +62,14 @@ class ExpenseTracker {
         /// @param category category object to be added. 
         /// @return True if added successfully, otherwise false if merged. 
         /// @throws std::runtime_error exception if the operation was unsuccessful for some reason.
-        bool addCategory(const Category &category);        
+        bool addCategory(const Category &category);  
+        
+        /// @brief Returns the category with the given identifier only if it is in the 
+        /// ExpenseTracker object. 
+        /// @param categoryIdentifier category to be found  
+        /// @return Reference to category object with matching identifier
+        /// @throws std::out_of_range exception if the category is not in the ExpenseTracker
+        Category& getCategory(const std::string &identifier) const;
 
         // ------------------------------------------------
         //               JSON File Operations
