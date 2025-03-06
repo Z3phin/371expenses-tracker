@@ -145,8 +145,7 @@ std::string Item::str() const noexcept {
     
     std::stringstream outputStream; 
 
-    outputStream << "{\"" << identifier << "\":"                                   // {"identifier":
-           << "{\"amount\":" << std::fixed << std::setprecision(2) << this->amount // {"amount": xx.xx
+    outputStream << "{\"amount\":" << std::fixed << std::setprecision(2) << this->amount // {"amount": xx.xx
            << ",\"date\":\"" << this->date.str() << "\""                           // ,"date":YYYY-MM-DD
            << ",\"description\":\"" << this->description << "\""                   // ,"description":xxxxxxx
            << ",\"tags\":[";                                                       // ,"tags":[
