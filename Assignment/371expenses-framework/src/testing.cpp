@@ -11,15 +11,22 @@
 
 int main() {
     Category c{"categoryIdent"};  
-    c.newItem("1", "new test", 99.99, Date()).addTag("hi"); 
-    c.addItem(Item("1", "another test", 99.99, Date()));
+    c.newItem("1", "test", 99.99, Date()); 
+    c.newItem("1", "WHAT", 10.99, Date());
+    c.addItem(Item("2", "another test", 45.01, Date()));
 
-    Category c1{"categoryIdent"}; 
-    c1.newItem("1", "new test", 99.99, Date());
-    c1.addItem(Item("2", "another test", 99.99, Date()));
+    c.getItem("2").addTag("hi");
+    Item i = Item("2", "Updated add item test", 45.01, Date());
+    i.addTag("hello");
 
-    std::cout << c.str() << "\n\n" << std::endl;
-    std::cout << c1.str() << std::endl;
+    c.addItem(i);
+
+    Category c1{"categoryIdent"};  
+    c1.newItem("1", "test", 99.99, Date()); 
+    c1.newItem("1", "WHAT", 10.99, Date());
+    c1.addItem(Item("2", "another test", 45.01, Date()));
+
+    std::cout << c.str() << std::endl;
 
     
 }
