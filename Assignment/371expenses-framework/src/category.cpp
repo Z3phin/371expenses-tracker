@@ -19,6 +19,13 @@
 //  Category c{"categoryIdent"};
 Category::Category(const std::string &_ident) noexcept : ident(_ident), itemMap({}) {}
 
+Category::~Category() {
+    // Delete all the pointers to items contained in the map.
+    for (auto it = itemMap.begin(); it != itemMap.end(); it++) {
+        delete it->second;
+    }
+}
+
 
 // TODO Write a function, size, that takes no parameters and returns an unsigned
 // int of the number of Items in the Category contains.
@@ -184,8 +191,7 @@ bool Category::deleteItem(const std::string &_identifier) {
         throw std::out_of_range(_identifier + " does not exist in Category " + this->getIdent());
     }
 
-    Item* pItem = it->second;
-    delete pItem; 
+    delete it->second; // Delete item pointer
     itemMap.erase(it);
     return true; 
 }

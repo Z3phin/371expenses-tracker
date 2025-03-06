@@ -26,6 +26,7 @@ class Category {
     public:
 
         Category(const std::string &_ident) noexcept; 
+        ~Category(); 
 
         unsigned int size() const noexcept;
 
