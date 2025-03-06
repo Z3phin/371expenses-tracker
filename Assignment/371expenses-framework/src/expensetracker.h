@@ -69,7 +69,14 @@ class ExpenseTracker {
         /// @param categoryIdentifier category to be found  
         /// @return Reference to category object with matching identifier
         /// @throws std::out_of_range exception if the category is not in the ExpenseTracker
-        Category& getCategory(const std::string &identifier) const;
+        Category& getCategory(const std::string &categoryIdentifier) const;
+
+        /// @brief Deletes the Category with the given identifier from the ExpenseTracker object if it exists,
+        /// otherwise an exception is thrown if the identifier could not be found. 
+        /// @param categoryIdentifier identifier of category to be deleted.     
+        /// @return True only if the Category was deleted. 
+        /// @throws std::out_of_range exception if the given category identifier could not be found.
+        bool deleteCategory(const std::string &categoryIdentifier);
 
         // ------------------------------------------------
         //               JSON File Operations

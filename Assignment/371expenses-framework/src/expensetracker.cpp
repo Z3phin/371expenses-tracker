@@ -165,6 +165,24 @@ Category& ExpenseTracker::getCategory(const std::string &categoryIdentifier) con
 //  etObj.newCategory("categoryIdent");
 //  etObj.deleteCategory("categoryIdent");
 
+/// @brief Deletes the Category with the given identifier from the ExpenseTracker object if it exists,
+/// otherwise an exception is thrown if the identifier could not be found. 
+/// @param categoryIdentifier identifier of category to be deleted. 
+/// @return True only if the Category was deleted. 
+/// @throws std::out_of_range exception if the given category identifier could not be found. 
+bool ExpenseTracker::deleteCategory(const std::string &categoryIdentifier) {
+    const auto it = categoryMap.find(categoryIdentifier);
+    if (it == categoryMap.cend()) {
+        throw std::out_of_range(categoryIdentifier + " was not found in ExpenseTracker object");
+    }   
+    
+    delete it->second;
+    it->second = nullptr;
+    categoryMap.erase(it);
+    return true; 
+}
+
+
 // TODO Write a function, getSum, that returns the sum of all Category expense
 // sums. This consists of the sum of all individual item amounts across all categories.
 // If no categories or no items exists return 0.
