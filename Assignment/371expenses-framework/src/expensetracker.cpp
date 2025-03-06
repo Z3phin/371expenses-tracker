@@ -15,6 +15,7 @@
 
 
 
+
 // ------------------------------------------------
 //                  Constructor
 // ------------------------------------------------
@@ -95,7 +96,6 @@ Category& ExpenseTracker::newCategory(const std::string &categoryIdent) {
 
 }
 
-
 // TODO Write a function, addCategory, that takes one parameter, a Category
 //  object, and returns true if the object was successfully inserted. If an
 //  object with the same identifier already exists, then the contents should be
@@ -107,6 +107,29 @@ Category& ExpenseTracker::newCategory(const std::string &categoryIdent) {
 //  ExpenseTracker etObj{};
 //  Category cObj{"categoryIdent"};
 //  etObj.addCategory(cObj);
+
+/// @brief Adds the given Category object to the ExpenseTracker. If the ExpenseTracker 
+/// already contains a category with the same identifier, the contents of the given category
+/// are merged with the existing one. 
+/// @param category category object to be added. 
+/// @return True if added successfully, otherwise false if merged. 
+/// @throws std::runtime_error exception if the operation was unsuccessful for some reason.
+bool ExpenseTracker::addCategory(const Category &category) {
+    auto it = categoryMap.find(category.getIdent());
+    if (it == categoryMap.end()) {
+        Category* c = new Category(category);
+        mergeItems(*c, category);
+        try {
+            categoryMap.insert(std::make_pair(c->getIdent(), c));
+            return true;
+        } catch (...) {
+            throw std::runtime_error("Something went wrong");
+        }
+    }
+    mergeItems(*(it->second), category);
+    return false; 
+}      
+
 
 // TODO Write a function, getCategory, that takes one parameter, a Category
 //  identifier and returns the Category with that identifier. If no Category

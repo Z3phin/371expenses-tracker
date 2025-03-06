@@ -56,6 +56,14 @@ class ExpenseTracker {
         /// @return reference to new or already existing category.
         Category& newCategory(const std::string &categoryIdent);
 
+        /// @brief Adds the given Category object to the ExpenseTracker. If the ExpenseTracker 
+        /// already contains a category with the same identifier, the contents of the given category
+        /// are merged with the existing one. 
+        /// @param category category object to be added. 
+        /// @return True if added successfully, otherwise false if merged. 
+        /// @throws std::runtime_error exception if the operation was unsuccessful for some reason.
+        bool addCategory(const Category &category);        
+
         // ------------------------------------------------
         //               JSON File Operations
         // ------------------------------------------------ 
@@ -67,6 +75,12 @@ class ExpenseTracker {
         // ------------------------------------------------
         //               JSON Representation
         // ------------------------------------------------
+
+        // ------------------------------------------------
+        //               Helper Functions
+        // ------------------------------------------------
+        
+        
 };
 
 #endif // EXPENSETRACKER_H
