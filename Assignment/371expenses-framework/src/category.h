@@ -46,6 +46,8 @@ class Category {
 
         bool deleteItem(const std::string &_identifier);
 
+        std::string str() const noexcept;
+
         friend bool operator==(const Category &lhs, const Category &rhs) noexcept;
 };
 

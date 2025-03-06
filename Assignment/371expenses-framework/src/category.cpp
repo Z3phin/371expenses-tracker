@@ -10,6 +10,7 @@
 #include "category.h"
 #include <iostream>
 #include <map>
+#include <sstream>
 
 // TODO Write a constructor that takes one parameter, a string identifier and
 // initialises the object and member data.
@@ -217,8 +218,6 @@ bool operator==(const Category &lhs, const Category &rhs) noexcept {
     return true; 
 }
 
-
-
 // TODO Write a function, str, that takes no parameters and returns a
 // std::string of the JSON representation of the data in the Category.
 //
@@ -227,3 +226,23 @@ bool operator==(const Category &lhs, const Category &rhs) noexcept {
 // Example:
 //  Category cObj{"categoryIdent"};
 //  std::string s = cObj.str();
+std::string Category::str() const noexcept {
+    std::stringstream output;
+    
+    output << "{";
+
+
+    for (auto it = itemMap.cbegin(); it != itemMap.cend(); it++) {
+        std::string itemIdent = it->first;
+        Item* pItem = it->second; 
+
+        output << "\"" << itemIdent << "\":"
+               << pItem->str();
+        if (it != std::prev(itemMap.cend())) {
+            output << ",";
+        } 
+    }
+
+    output << "}";
+    return output.str();
+}
