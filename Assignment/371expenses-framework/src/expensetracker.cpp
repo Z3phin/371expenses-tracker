@@ -73,6 +73,29 @@ unsigned int ExpenseTracker::size() const noexcept {
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
 
+/// @brief Creates a new Category and adds it to the ExpenseTracker and returns it
+/// as a reference, or returns a reference to an existing category if it has the 
+/// same identifier. 
+/// @param categoryIdent identifier of new category.
+/// @return reference to new or already existing category. 
+Category& ExpenseTracker::newCategory(const std::string &categoryIdent) {
+    auto it = categoryMap.find(categoryIdent);
+    if (it != categoryMap.end()) {
+        return *(it->second);
+    }
+
+    Category* c = new Category(categoryIdent);
+    try {
+        categoryMap.insert(std::make_pair(categoryIdent, c));
+        return *c; 
+    } catch (...) {
+        delete c; 
+        throw std::runtime_error("Something went wrong!");
+    }
+
+}
+
+
 // TODO Write a function, addCategory, that takes one parameter, a Category
 //  object, and returns true if the object was successfully inserted. If an
 //  object with the same identifier already exists, then the contents should be

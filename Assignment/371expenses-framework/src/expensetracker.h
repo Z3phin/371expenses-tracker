@@ -49,6 +49,13 @@ class ExpenseTracker {
         //               Category Operations
         // ------------------------------------------------ 
 
+        /// @brief Creates a new Category and adds it to the ExpenseTracker and returns it
+        /// as a reference, or returns a reference to an existing category if it has the 
+        /// same identifier. 
+        /// @param categoryIdent identifier of new category.
+        /// @return reference to new or already existing category.
+        Category& newCategory(const std::string &categoryIdent);
+
         // ------------------------------------------------
         //               JSON File Operations
         // ------------------------------------------------ 
