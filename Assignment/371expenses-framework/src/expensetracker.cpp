@@ -41,12 +41,23 @@ ExpenseTracker::~ExpenseTracker() {
     }
 }
 
+// ------------------------------------------------
+//                  Property Functions
+// ------------------------------------------------ 
+
 // TODO Write a function, size, that takes no parameters and returns an unsigned
 //  int of the number of categories the ExpenseTracker contains.
 //
 // Example:
 //  ExpenseTracker etObj{};
 //  auto size = etObj.size();
+
+/// @brief Returns the size (number of categories) of the ExpenseTracker object. 
+/// @return number of categories.
+unsigned int ExpenseTracker::size() const noexcept {
+    return this->categoryMap.size();
+}
+
 
 // TODO Write a function, newCategory, that takes one parameter, a category
 //  identifier, and returns the Category object as a reference. If an object

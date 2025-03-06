@@ -37,6 +37,13 @@ class ExpenseTracker {
         /// @brief Desconstructs the ExpenseTracker object
         ~ExpenseTracker();
 
+        // ------------------------------------------------
+        //                  Property Functions
+        // ------------------------------------------------        
+
+        /// @brief Returns the size (number of categories) of the ExpenseTracker object. 
+        /// @return number of categories.
+        unsigned int size() const noexcept;
 };
 
 #endif // EXPENSETRACKER_H
