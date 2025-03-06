@@ -188,4 +188,15 @@ bool operator!=(const Item& lhs, const Item& rhs) noexcept {
     return !(lhs == rhs);
 }
 
+// Merges the tags of two Item objects. The tags of the other item will be added
+// to the target Item, if it does not already contain them. 
+void mergeTags(Item& target, const Item& other) {
+    for (auto it = other.tags.cbegin(); 
+              it != other.tags.cend();
+              it ++ ) {
+        target.addTag(*it);
+    }    
+}
+
+
 

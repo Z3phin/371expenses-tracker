@@ -131,6 +131,9 @@ class Category {
         ///
         /// @return JSON representation of this Category
         std::string str() const noexcept;
+
+
+        friend void mergeItems(Category &target, const Category &other);
 };
 
 #endif // CATEGORY_H

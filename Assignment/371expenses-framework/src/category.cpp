@@ -16,19 +16,17 @@
 //                  Helper Functions
 // -----------------------------------------------------
 
-// Merges the tags of two Item objects. The tags of the other item will be added
-// to the target Item, if it does not already contain them. 
-static void mergeTags(Item &target, const Item &other) {
-    auto otherTags = other.getTags();
-    for (const std::string& tag : otherTags) {
-        target.addTag(tag);
+void mergeItems(Category &target, const Category &other) {
+    for (auto it = other.itemMap.cbegin(); 
+              it != other.itemMap.cend();
+              it ++ ) {
+        target.addItem(*(it->second));
     }
 }
 
 // -----------------------------------------------------
 //                  Category Class Functions
 // -----------------------------------------------------
-
 
 // ------------------------------------------------
 //                  Constructors
