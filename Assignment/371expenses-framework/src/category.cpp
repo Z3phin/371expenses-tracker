@@ -73,16 +73,17 @@ Item& Category::newItem(const std::string &_identifier,
         try {
             
             auto result = itemMap.emplace(std::make_pair(_identifier, pNewItem));
-            auto pair = *result.first;
-            if (!result.second) {
-                pair.second = pNewItem;
+
+            auto it = itemMap.find(_identifier);
+            if (result.second == false) {
+                delete it->second; 
+                it->second = pNewItem;
             }
+            return *(it->second);
 
-            return *pair.second;
-
-        } catch (const std::exception &ex) {
-            delete pNewItem; // necessary? could this cause issues
-            throw std::runtime_error(ex.what());
+        } catch (...) { // What would go wrong? 
+            delete pNewItem;
+            throw std::runtime_error("Something went wrong");
         }
 
 }
@@ -112,6 +113,7 @@ bool Category::addItem(const Item &item) noexcept {
 
     auto it = itemMap.find(item.getIdent());
     bool contains = it != itemMap.end();
+    
     if (contains) {
         auto pItem = it->second; 
 
