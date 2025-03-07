@@ -387,19 +387,14 @@ bool operator!=(const ExpenseTracker &lhs, const ExpenseTracker &rhs) noexcept {
 /// @brief Returns a JSON formatted string representation of the ExpenseTracker object.
 /// @return JSON formatted string representation of the object. 
 std::string ExpenseTracker::str() const noexcept {
-    std::stringstream output;
-    
-    output << "{";
-
-
-    for (auto it = categoryMap.cbegin(); it != categoryMap.cend(); it++) {
-        output << "\"" << it->first << "\":"
-               << it->second->str();
-        if (it != std::prev(categoryMap.cend())) {
-            output << ",";
-        } 
-    }
-
-    output << "}";
-    return output.str();
+    return to_json().dump();
 }
+
+nlohmann::json ExpenseTracker::to_json() const noexcept {
+    nlohmann::json json = nlohmann::json::object();
+    for (auto it = categoryMap.cbegin(); it != categoryMap.cend(); it++) {
+        json[it->first] = it->second->to_json();
+    }   
+    return json;
+}
+

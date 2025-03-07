@@ -123,6 +123,8 @@ class ExpenseTracker {
         /// @return JSON formatted string representation of the object. 
         std::string str() const noexcept;
 
+        nlohmann::json to_json() const noexcept;
+
         // ------------------------------------------------
         //               Helper Functions
         // ------------------------------------------------
