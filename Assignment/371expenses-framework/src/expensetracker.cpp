@@ -310,6 +310,21 @@ void ExpenseTracker::load(const std::string &database) {
 //  ...
 //  etObj.save("database.json");
 
+/// @brief Saves the ExpenseTracker object to the given file as JSON.
+/// @param filepath file for date to be saved to. 
+void ExpenseTracker::save(const std::string &filepath) const {
+    std::ofstream output;
+    output.open(filepath);
+    if (!output.good()) {
+        output.close();
+        throw std::runtime_error(filepath + " could not be opened successfully.");
+    }
+
+    output << this->str();
+    output.close();
+}
+
+
 // ------------------------------------------------
 //               Operator Functions
 // ------------------------------------------------ 
@@ -380,7 +395,6 @@ std::string ExpenseTracker::str() const noexcept {
     for (auto it = categoryMap.cbegin(); it != categoryMap.cend(); it++) {
         output << "\"" << it->first << "\":"
                << it->second->str();
-               
         if (it != std::prev(categoryMap.cend())) {
             output << ",";
         } 

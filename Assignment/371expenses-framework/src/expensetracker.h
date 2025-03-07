@@ -93,6 +93,10 @@ class ExpenseTracker {
         /// @throws exceptions may be thrown when parsing the JSON file (e.g. improper formatting)
         void load(const std::string &database);
 
+        /// @brief Saves the ExpenseTracker object to the given file as JSON.
+        /// @param filepath file for date to be saved to. 
+        void save(const std::string &filepath) const;
+
         // ------------------------------------------------
         //               Operator Functions
         // ------------------------------------------------ 
