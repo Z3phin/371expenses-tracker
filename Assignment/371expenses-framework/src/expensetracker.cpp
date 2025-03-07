@@ -276,7 +276,10 @@ double ExpenseTracker::getSum() const noexcept {
 //  ExpenseTracker etObj{};
 //  etObj.load("database.json");
 
-
+/// @brief Opens a JSON file with the given file name and populates the ExpenseTracker 
+/// with its categories and items. Invalid JSON objects will be ignored.
+/// @param database JSON datbase filename.
+/// @throws exceptions may be thrown when parsing the JSON file (e.g. improper formatting)
 void ExpenseTracker::load(const std::string &database) {
     std::ifstream inputFileStream;
     inputFileStream.open(database, std::ifstream::in);
@@ -294,7 +297,6 @@ void ExpenseTracker::load(const std::string &database) {
     } 
     inputFileStream.close();
 }
-
 
 
 // TODO Write a function, save, that takes one parameter, the path of the file
@@ -320,6 +322,29 @@ void ExpenseTracker::load(const std::string &database) {
 //  if(etObj1 == etObj2) {
 //    ...
 //  }
+
+/// @brief Compares two ExpenseTracker objects. The two objects are equal if they have
+/// the same data, i.e. equivalent categories and items. 
+/// @param lhs left hand side object.
+/// @param rhs right hand side object.
+/// @return True if the objects are equal, otherwise false. 
+bool operator==(const ExpenseTracker &lhs, const ExpenseTracker &rhs) noexcept {
+    if (lhs.size() != rhs.size()) return false;
+
+    for (auto it = lhs.categoryMap.cbegin(); it != lhs.categoryMap.cend(); it++) {
+        std::string categoryIdent = it->second->getIdent();
+        auto result = rhs.categoryMap.find(categoryIdent);
+
+        if (result == rhs.categoryMap.end()) return false; 
+
+        Category &lCategory = *(it->second);
+        Category &rCategory = *(result->second);
+        
+        if (lCategory != rCategory) return false;
+    }
+    return true; 
+}
+
 
 // ------------------------------------------------
 //               JSON Representation

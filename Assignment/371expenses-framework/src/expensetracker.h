@@ -87,11 +87,22 @@ class ExpenseTracker {
         //               JSON File Operations
         // ------------------------------------------------ 
 
+        /// @brief Opens a JSON file with the given file name and populates the ExpenseTracker 
+        /// with its categories and items. Invalid JSON objects will be ignored.
+        /// @param database JSON datbase filename.
+        /// @throws exceptions may be thrown when parsing the JSON file (e.g. improper formatting)
         void load(const std::string &database);
 
         // ------------------------------------------------
         //               Operator Functions
         // ------------------------------------------------ 
+
+        /// @brief Compares two ExpenseTracker objects. The two objects are equal if they have
+        /// the same data, i.e. equivalent categories and items. 
+        /// @param lhs left hand side object.
+        /// @param rhs right hand side object.
+        /// @return True if the objects are equal, otherwise false.
+        friend bool operator==(const ExpenseTracker &lhs, const ExpenseTracker &rhs) noexcept;
 
         // ------------------------------------------------
         //               JSON Representation
