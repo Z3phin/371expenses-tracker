@@ -276,16 +276,23 @@ double ExpenseTracker::getSum() const noexcept {
 //  ExpenseTracker etObj{};
 //  etObj.load("database.json");
 
-// Need to check that data is valid.
+
 void ExpenseTracker::load(const std::string &database) {
-    std::ifstream i(database);
-    nlohmann::json j;
-    i >> j; 
-    
-    // Add categories to ExpenseTracker
+    std::ifstream inputFileStream;
+    inputFileStream.open(database, std::ifstream::in);
+    if (!inputFileStream.good()) {
+        inputFileStream.close();
+        throw std::runtime_error("File did not open successfully");
+    }
+
+    nlohmann::json j = nlohmann::json::parse(inputFileStream);
+   
     for (auto it = j.cbegin(); it != j.cend(); it++) { // iterates through categories
-        newCategory(it.key()).loadJsonItems(it.value());
+        if (it.value().is_object()) {
+            newCategory(it.key()).loadJsonItems(it.value());
+        }
     } 
+    inputFileStream.close();
 }
 
 
