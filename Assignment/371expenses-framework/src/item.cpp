@@ -140,35 +140,21 @@ void Item::mergeTags(const Item& other) noexcept {
 ///
 /// @return std::string of the JSON representation of the data in this Item.
 std::string Item::str() const noexcept {
-    
-    std::stringstream outputStream; 
-
-    outputStream << "{\"amount\":";
-    if (amount == (int) amount) {
-        outputStream << std::setprecision(1);
-    } else {
-        outputStream << std::setprecision(2);
-    }
-
-    outputStream << std::fixed << this->amount // {"amount": xx.xx
-           << ",\"date\":\"" << this->date.str() << "\""                           // ,"date":YYYY-MM-DD
-           << ",\"description\":\"" << this->description << "\""                   // ,"description":xxxxxxx
-           << ",\"tags\":[";                                                       // ,"tags":[
-
-    unsigned int count = 0;       
-    for (auto it = tags.cbegin(); it != tags.cend(); it++) { // "tag","tag1",...,"tagN"
-       
-        outputStream << "\"" << *it << "\"";
-        
-        if (++count < tags.size()) {
-            outputStream << ",";
-        }
-    }   
-
-    outputStream << "]}"; // ]}
-
-    return outputStream.str();
+    return to_json().dump();
 }
+
+nlohmann::json Item::to_json() const noexcept {
+    nlohmann::json json = nlohmann::json::object();
+    json["amount"] = amount;
+    json["date"] = date.str();
+    json["description"] = description;
+    nlohmann::json jsonTags = nlohmann::json::array();
+    for (auto it = tags.cbegin(); it != tags.cend(); it++) {
+        jsonTags.push_back(*it);
+    }
+    return json; 
+}
+
 
 // ------------------------------------------------
 //                    Operators

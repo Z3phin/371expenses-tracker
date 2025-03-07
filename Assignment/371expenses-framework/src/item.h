@@ -15,6 +15,7 @@
 #define ITEM_H
 
 #include "date.h"
+#include "lib_json.hpp"
 #include <unordered_set>
 #include <string>
 
@@ -116,6 +117,8 @@ class Item {
         ///
         /// @return std::string of the JSON representation of the data in this Item.
         std::string str() const noexcept; 
+
+        nlohmann::json to_json() const noexcept;
 
 
         // ------------------------------------------------
