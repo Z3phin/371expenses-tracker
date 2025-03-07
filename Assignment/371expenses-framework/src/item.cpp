@@ -131,6 +131,16 @@ bool Item::containsTag(const std::string &tag) const noexcept {
     return tags.find(tag) != tags.end(); 
 }
 
+/// @brief Merges the tags of another Item object with this object.
+/// @param other Item with tags to be merged into this object.
+void Item::mergeTags(const Item& other) noexcept {
+    for (auto it = other.tags.cbegin(); 
+              it != other.tags.cend();
+              it ++ ) {
+        this->addTag(*it);
+    }    
+}
+
 
 // ------------------------------------------------
 //               JSON Representation 
@@ -162,7 +172,6 @@ std::string Item::str() const noexcept {
     return outputStream.str();
 }
 
-
 // ------------------------------------------------
 //                    Operators
 // ------------------------------------------------
@@ -188,15 +197,6 @@ bool operator!=(const Item& lhs, const Item& rhs) noexcept {
     return !(lhs == rhs);
 }
 
-// Merges the tags of two Item objects. The tags of the other item will be added
-// to the target Item, if it does not already contain them. 
-void mergeTags(Item& target, const Item& other) {
-    for (auto it = other.tags.cbegin(); 
-              it != other.tags.cend();
-              it ++ ) {
-        target.addTag(*it);
-    }    
-}
 
 
 

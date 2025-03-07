@@ -105,6 +105,10 @@ class Item {
         /// @return number of tags.
         unsigned int numTags() const noexcept;
 
+        /// @brief Merges the tags of another Item object with this object.
+        /// @param other Item with tags to be merged into this object.
+        void mergeTags(const Item& other) noexcept;        
+
         // ------------------------------------------------
         //               JSON Representation 
         // ------------------------------------------------
@@ -135,7 +139,6 @@ class Item {
         /// @return True if lhs identifier, date, amount and tags are the same as rhs. Otherwise false.
         friend bool operator!=(const Item& lhs, const Item& rhs) noexcept;
         
-        friend void mergeTags(Item& target, const Item& other);        
 };
 
 #endif // ITEM_H

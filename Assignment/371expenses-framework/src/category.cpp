@@ -167,13 +167,13 @@ bool Category::addItem(const Item &item) noexcept {
     if (contains) {
         auto pItem = it->second; 
 
-        mergeTags(*pItem, item);
+        pItem->mergeTags(item);
         pItem->setDescription(item.getDescription());
         pItem->setAmount(item.getAmount());
         pItem->setDate(item.getDate());
     } else {
         Item* pNewItem = new Item(item);
-        mergeTags(*pNewItem, item);
+        pNewItem->mergeTags(item);
         itemMap.emplace(std::make_pair(item.getIdent(), pNewItem));
     }
 
