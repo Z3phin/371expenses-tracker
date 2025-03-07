@@ -104,6 +104,13 @@ class ExpenseTracker {
         /// @return True if the objects are equal, otherwise false.
         friend bool operator==(const ExpenseTracker &lhs, const ExpenseTracker &rhs) noexcept;
 
+        /// @brief Compares two ExpenseTracker objects. The two objects are not equal if they have
+        /// differing data, i.e. different items or categories. 
+        /// @param lhs left hand side object.
+        /// @param rhs right hand side object.
+        /// @return True if the objects are not equal, otherwise false.
+        friend bool operator!=(const ExpenseTracker &lhs, const ExpenseTracker &rhs) noexcept;
+
         // ------------------------------------------------
         //               JSON Representation
         // ------------------------------------------------
