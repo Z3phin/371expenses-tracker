@@ -16,7 +16,6 @@
 
 #include "date.h"
 #include <set>
-#include <vector>
 #include <string>
 
 class Item {
@@ -61,8 +60,6 @@ class Item {
         /// @brief Gets the date belonging to this item.
         /// @return Date object belonging to this item
         Date getDate() const noexcept;
-
-        std::vector<std::string> getTags() const noexcept;
 
         // ------------------------------------------------
         //                      Setters

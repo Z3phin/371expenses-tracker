@@ -61,18 +61,6 @@ Date Item::getDate() const noexcept {
     return this->date;
 }
 
-std::vector<std::string> Item::getTags() const noexcept {
-    std::vector<std::string> tagsVector;
-
-    for (const std::string& tag : tags) {
-        tagsVector.push_back(tag);
-    }
-
-    return tagsVector;
-}
-
-
-
 // ------------------------------------------------
 //                     Setters
 // ------------------------------------------------
