@@ -7,12 +7,14 @@
 // Canvas: https://canvas.swansea.ac.uk/courses/52781
 // -----------------------------------------------------
 #include "expensetracker.h"
+#include "lib_json.hpp"
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
 #include <string>
 #include <utility>
-
+#include <vector>
+#include  "date.h" // remove to category
 
 
 
@@ -275,6 +277,37 @@ double ExpenseTracker::getSum() const noexcept {
 // Example:
 //  ExpenseTracker etObj{};
 //  etObj.load("database.json");
+
+// Need to check that data is valid.
+void ExpenseTracker::load(const std::string &database) {
+    std::ifstream i(database);
+    nlohmann::json j;
+    i >> j; 
+    
+    // Add categories to ExpenseTracker
+    for (auto it = j.cbegin(); it != j.cend(); it++) { // iterates through categories
+        Category& c = newCategory(it.key());
+    
+        // add items to category
+        for (auto iit = it.value().cbegin(); iit != it.value().cend(); iit++) { // iterates through items
+            auto amount = iit.value().at("amount").get<double>();
+            auto dateStr = iit.value().at("date").get<std::string>();
+            auto description = iit.value().at("description").get<std::string>();
+            auto tags = iit.value().at("tags").get<std::vector<std::string>>();
+
+            Item& i = c.newItem(iit.key(), description, amount, Date(dateStr));
+
+            // add tag to item
+            for (auto tagIt = tags.cbegin(); tagIt != tags.cend(); tagIt++) {
+                i.addTag(*tagIt);
+            }
+
+        }
+
+    } 
+}
+
+
 
 // TODO Write a function, save, that takes one parameter, the path of the file
 //  to write the database to. The function should serialise the ExpenseTracker object

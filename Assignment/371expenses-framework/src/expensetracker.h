@@ -87,6 +87,8 @@ class ExpenseTracker {
         //               JSON File Operations
         // ------------------------------------------------ 
 
+        void load(const std::string &database);
+
         // ------------------------------------------------
         //               Operator Functions
         // ------------------------------------------------ 
