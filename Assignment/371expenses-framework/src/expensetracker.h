@@ -115,6 +115,10 @@ class ExpenseTracker {
         //               JSON Representation
         // ------------------------------------------------
 
+        /// @brief Returns a JSON formatted string representation of the ExpenseTracker object.
+        /// @return JSON formatted string representation of the object. 
+        std::string str() const noexcept;
+
         // ------------------------------------------------
         //               Helper Functions
         // ------------------------------------------------
