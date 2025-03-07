@@ -50,12 +50,12 @@ int main() {
 
     cObj1.addItem(iObj1);
     cObj1.addItem(iObj1);
-    cObj2.addItem(iObj2);
+    cObj2.addItem(iObj2); 
 
-    etObj1.addCategory(cObj1);
-    etObj1.addCategory(cObj2);
+    // etObj1.addCategory(cObj1);
+    // etObj1.addCategory(cObj2);
 
-    etObj1.save("testdatabasealt.json");
+    // etObj1.save("testdatabasealt.json");
 
     // std::string testStr = "{\"Studies\":{\"1\":{\"amount\":39.99,\"date\":\"2024-12-25\","
     //              "\"description\":\"C++ Book\","
@@ -63,10 +63,7 @@ int main() {
     //              "{\"2\":{\"amount\":164.0,\"date\":\"2024-12-26\",\"description\":\"Bus "
     //              "Pass\"," "\"tags\":[\"uni\"]}}}";
 
-    //std::cout << etObj1.str().find(testStr) << std::endl;
-
-    // std::cout << testStr.find(testStr) << std::endl;
-    // std::cout << ss.str().find(testStr) << std::endl;
+    // std::cout << etObj1.str().find(testStr) << std::endl;
 
     
 }

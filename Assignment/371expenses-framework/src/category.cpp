@@ -335,24 +335,15 @@ bool operator!=(const Category &lhs, const Category &rhs) noexcept {
 ///
 /// @return JSON representation of this Category
 std::string Category::str() const noexcept {
-    std::stringstream output;
-    
-    output << "{";
+    return to_json().dump();
+}
 
-
+nlohmann::json Category::to_json() const noexcept {
+    nlohmann::json json = nlohmann::json::object();
     for (auto it = itemMap.cbegin(); it != itemMap.cend(); it++) {
-        std::string itemIdent = it->first;
-        Item* pItem = it->second; 
-
-        output << "\"" << itemIdent << "\":"
-               << pItem->str();
-        if (it != std::prev(itemMap.cend())) {
-            output << ",";
-        } 
+        json[it->first] = it->second->to_json();   
     }
-
-    output << "}";
-    return output.str();
+    return json; 
 }
 
 /// @brief Attempts to load a json object of Items into this category. 

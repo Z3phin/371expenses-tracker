@@ -135,6 +135,8 @@ class Category {
         /// @return JSON representation of this Category
         std::string str() const noexcept;
 
+        nlohmann::json to_json() const noexcept;
+
         /// @brief Attempts to load a json object of Items into this category. 
         /// Any item objects that are not of the expected format and types are ignored.
         /// @param json json object to load items from.
