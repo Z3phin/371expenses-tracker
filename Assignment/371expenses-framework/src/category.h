@@ -133,9 +133,20 @@ class Category {
         /// @return JSON representation of this Category
         std::string str() const noexcept;
 
+        /// @brief Attempts to load a json object of Items into this category. 
+        /// Any item objects that are not of the expected format and types are ignored.
+        /// @param json json object to load items from.
         void loadJsonItems(const nlohmann::json &json);
 
+        /// @brief Loads an Item into the Category based on the json object given with the given
+        /// identifier, only if the json object is of expected format with valid types, otherwise 
+        /// it is not added
+        /// @param itemIdent 
+        /// @param json 
+        void loadJsonItem(const std::string &itemIdent, const nlohmann::json &json);
+
         friend void mergeItems(Category &target, const Category &other);
+        void merge(Category &other);
 };
 
 #endif // CATEGORY_H

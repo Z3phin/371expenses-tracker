@@ -354,19 +354,73 @@ std::string Category::str() const noexcept {
     return output.str();
 }
 
+/// @brief Attempts to load a json object of Items into this category. 
+/// Any item objects that are not of the expected format and types are ignored.
+/// @param json json object to load items from.
 void Category::loadJsonItems(const nlohmann::json &json) {
+    if (!json.is_object()) {
+        return;
+    }
+
     for (auto it = json.cbegin(); it != json.cend(); it++) {
-        auto amount = it.value().at("amount").get<double>();
-        auto dateStr = it.value().at("date").get<std::string>();
-        auto description = it.value().at("description").get<std::string>();
-        auto tags = it.value().at("tags").get<std::vector<std::string>>();
+        loadJsonItem(it.key(), it.value());
+    }
+}
 
-        Item& i = this->newItem(it.key(), description, amount, Date(dateStr));
+/// @brief Loads an Item into the Category based on the json object given with the given
+/// identifier, only if the json object is of expected format with valid types, otherwise 
+/// it is not added
+/// @param itemIdent 
+/// @param json 
+void Category::loadJsonItem(const std::string &itemIdent, const nlohmann::json &json) {
+    if (!json.is_object()) {
+        return; // Possibly throw error (or this could return a bool)
+    }
 
-        // add tag to item
-        for (auto tagIt = tags.cbegin(); tagIt != tags.cend(); tagIt++) {
-            i.addTag(*tagIt);
+    if (json.size() != 4 
+    || !json.contains("amount") 
+        || !json.contains("date") 
+        || !json.contains("description")
+        || !json.contains("tags")) {
+            return; // Possibly throw error or return false
+    }
+
+    auto amountJson = json.at("amount");
+    auto dateStrJson = json.at("date");
+    auto descriptionJson = json.at("description");
+    auto tagsJson = json.at("tags");
+
+    if (!amountJson.is_number() 
+        || !dateStrJson.is_string() 
+        || !descriptionJson.is_string()
+        || !tagsJson.is_array()) {
+            return; // possibly throw error or return false
+    }
+
+    for (auto tagsJsonIt = tagsJson.cbegin();
+         tagsJsonIt != tagsJson.cend();
+         tagsJsonIt++) {
+
+        if (!tagsJsonIt->is_string()) {
+            return; // Ignore invalid data
         }
+    }
 
+    auto amount = amountJson.get<double>();
+    auto dateStr = dateStrJson.get<std::string>();
+    auto description = descriptionJson.get<std::string>();
+    auto tags = tagsJson.get<std::set<std::string>>();
+
+    Date date;
+    try {
+        date = Date(dateStr);
+    } catch (std::invalid_argument &ex) {
+        return; // Ignore object
+    }
+    Item& i = this->newItem(itemIdent, description, amount, date);
+
+    // Add each tag to the item.
+    for (auto tagIt = tags.cbegin(); tagIt != tags.cend(); tagIt++) {
+        i.addTag(*tagIt);
     }
 }
