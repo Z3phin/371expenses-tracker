@@ -143,14 +143,24 @@ std::string Item::str() const noexcept {
     
     std::stringstream outputStream; 
 
-    outputStream << "{\"amount\":" << std::fixed << std::setprecision(2) << this->amount // {"amount": xx.xx
+    outputStream << "{\"amount\":";
+    if (amount == (int) amount) {
+        outputStream << std::setprecision(1);
+    } else {
+        outputStream << std::setprecision(2);
+    }
+
+    outputStream << std::fixed << this->amount // {"amount": xx.xx
            << ",\"date\":\"" << this->date.str() << "\""                           // ,"date":YYYY-MM-DD
            << ",\"description\":\"" << this->description << "\""                   // ,"description":xxxxxxx
            << ",\"tags\":[";                                                       // ,"tags":[
 
-    for (auto it = this->tags.cbegin(); it != this->tags.cend(); it++) { // "tag","tag1",...,"tagN"
+    unsigned int count = 0;       
+    for (auto it = tags.cbegin(); it != tags.cend(); it++) { // "tag","tag1",...,"tagN"
+       
         outputStream << "\"" << *it << "\"";
-        if (it != std::prev(this->tags.end())) {
+        
+        if (++count < tags.size()) {
             outputStream << ",";
         }
     }   

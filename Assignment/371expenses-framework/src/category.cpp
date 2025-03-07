@@ -10,6 +10,7 @@
 #include "category.h"
 #include <iostream>
 #include <map>
+#include <set>
 #include <sstream>
 
 // -----------------------------------------------------
@@ -162,7 +163,7 @@ Item& Category::newItem(const std::string &_identifier,
 bool Category::addItem(const Item &item) noexcept {
 
     auto it = itemMap.find(item.getIdent());
-    bool contains = it != itemMap.end();
+    bool contains = (it != itemMap.end());
     
     if (contains) {
         auto pItem = it->second; 
@@ -172,9 +173,12 @@ bool Category::addItem(const Item &item) noexcept {
         pItem->setAmount(item.getAmount());
         pItem->setDate(item.getDate());
     } else {
-        Item* pNewItem = new Item(item);
+        Item* pNewItem = new Item(item.getIdent(), 
+                                  item.getDescription(),
+                                  item.getAmount(),
+                                  item.getDate());
         pNewItem->mergeTags(item);
-        itemMap.emplace(std::make_pair(item.getIdent(), pNewItem));
+        itemMap.insert(std::make_pair(item.getIdent(), pNewItem));
     }
 
     return !contains;

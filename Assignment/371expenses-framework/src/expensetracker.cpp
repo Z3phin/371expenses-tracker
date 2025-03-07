@@ -118,7 +118,7 @@ Category& ExpenseTracker::newCategory(const std::string &categoryIdent) {
 bool ExpenseTracker::addCategory(const Category &category) {
     auto it = categoryMap.find(category.getIdent());
     if (it == categoryMap.end()) {
-        Category* c = new Category(category);
+        Category* c = new Category(category.getIdent());
         c->mergeItems(category);
         try {
             categoryMap.insert(std::make_pair(c->getIdent(), c));

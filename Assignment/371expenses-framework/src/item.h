@@ -15,7 +15,7 @@
 #define ITEM_H
 
 #include "date.h"
-#include <set>
+#include <unordered_set>
 #include <string>
 
 class Item {
@@ -24,7 +24,7 @@ class Item {
         std::string description; 
         double amount; 
         Date date;
-        std::set<std::string> tags; 
+        std::unordered_set<std::string> tags; 
 
     public:
         // TODO possibly some default constructors?
