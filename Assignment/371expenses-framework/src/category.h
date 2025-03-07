@@ -13,6 +13,7 @@
 #ifndef CATEGORY_H
 #define CATEGORY_H
 
+#include "lib_json.hpp"
 #include "item.h"
 #include "date.h"
 #include <string>
@@ -132,6 +133,7 @@ class Category {
         /// @return JSON representation of this Category
         std::string str() const noexcept;
 
+        void loadJsonItems(const nlohmann::json &json);
 
         friend void mergeItems(Category &target, const Category &other);
 };

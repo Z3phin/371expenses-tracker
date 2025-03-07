@@ -134,9 +134,8 @@ class Item {
         /// @param rhs right hand side item.
         /// @return True if lhs identifier, date, amount and tags are the same as rhs. Otherwise false.
         friend bool operator!=(const Item& lhs, const Item& rhs) noexcept;
-
-        friend void mergeTags(Item& target, const Item& other);
         
+        friend void mergeTags(Item& target, const Item& other);        
 };
 
 #endif // ITEM_H

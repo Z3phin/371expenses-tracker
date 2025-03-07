@@ -353,3 +353,20 @@ std::string Category::str() const noexcept {
     output << "}";
     return output.str();
 }
+
+void Category::loadJsonItems(const nlohmann::json &json) {
+    for (auto it = json.cbegin(); it != json.cend(); it++) {
+        auto amount = it.value().at("amount").get<double>();
+        auto dateStr = it.value().at("date").get<std::string>();
+        auto description = it.value().at("description").get<std::string>();
+        auto tags = it.value().at("tags").get<std::vector<std::string>>();
+
+        Item& i = this->newItem(it.key(), description, amount, Date(dateStr));
+
+        // add tag to item
+        for (auto tagIt = tags.cbegin(); tagIt != tags.cend(); tagIt++) {
+            i.addTag(*tagIt);
+        }
+
+    }
+}
