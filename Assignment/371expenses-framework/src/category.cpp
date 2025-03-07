@@ -13,18 +13,6 @@
 #include <sstream>
 
 // -----------------------------------------------------
-//                  Helper Functions
-// -----------------------------------------------------
-
-void mergeItems(Category &target, const Category &other) {
-    for (auto it = other.itemMap.cbegin(); 
-              it != other.itemMap.cend();
-              it ++ ) {
-        target.addItem(*(it->second));
-    }
-}
-
-// -----------------------------------------------------
 //                  Category Class Functions
 // -----------------------------------------------------
 
@@ -266,6 +254,15 @@ bool Category::deleteItem(const std::string &_identifier) {
     itemMap.erase(it);
     return true; 
 }
+
+void Category::mergeItems(const Category &other) {
+    for (auto it = other.itemMap.cbegin(); 
+              it != other.itemMap.cend();
+              it ++ ) {
+        this->addItem(*(it->second));
+    }
+}
+
 
 // ------------------------------------------------
 //              Operator Functions

@@ -118,7 +118,7 @@ bool ExpenseTracker::addCategory(const Category &category) {
     auto it = categoryMap.find(category.getIdent());
     if (it == categoryMap.end()) {
         Category* c = new Category(category);
-        mergeItems(*c, category);
+        c->mergeItems(category);
         try {
             categoryMap.insert(std::make_pair(c->getIdent(), c));
             return true;
@@ -126,7 +126,7 @@ bool ExpenseTracker::addCategory(const Category &category) {
             throw std::runtime_error("Something went wrong");
         }
     }
-    mergeItems(*(it->second), category);
+    it->second->mergeItems(category);
     return false; 
 }      
 

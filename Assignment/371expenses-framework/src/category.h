@@ -103,6 +103,8 @@ class Category {
         /// @throws std::out_of_range exception if the Item with the given identifier
         /// could not be found in the category.
         bool deleteItem(const std::string &_identifier);
+
+        void mergeItems(const Category &other);
     
         // ------------------------------------------------
         //              Operator Functions
@@ -145,8 +147,7 @@ class Category {
         /// @param json 
         void loadJsonItem(const std::string &itemIdent, const nlohmann::json &json);
 
-        friend void mergeItems(Category &target, const Category &other);
-        void merge(Category &other);
+        
 };
 
 #endif // CATEGORY_H
