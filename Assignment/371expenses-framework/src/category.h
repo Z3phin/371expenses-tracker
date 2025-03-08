@@ -140,7 +140,7 @@ class Category {
         /// @brief Attempts to load a json object of Items into this category. 
         /// Any item objects that are not of the expected format and types are ignored.
         /// @param json json object to load items from.
-        void loadJsonItems(const nlohmann::json &json);
+        void from_json(const nlohmann::json &json);
 
         /// @brief Loads an Item into the Category based on the json object given with the given
         /// identifier, only if the json object is of expected format with valid types, otherwise 

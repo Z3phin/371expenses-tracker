@@ -293,7 +293,7 @@ void ExpenseTracker::load(const std::string &database) {
    
     for (auto it = j.cbegin(); it != j.cend(); it++) { // iterates through categories
         if (it.value().is_object()) {
-            newCategory(it.key()).loadJsonItems(it.value());
+            newCategory(it.key()).from_json(it.value());
         }
     } 
     inputFileStream.close();

@@ -156,9 +156,6 @@ nlohmann::json Item::to_json() const noexcept {
     json["description"] = description;
     nlohmann::json jsonTags = nlohmann::json::array();
     for (auto it = tags.cbegin(); it != tags.cend(); it++) {
-
-        std::cout << *it << std::endl;
-
         jsonTags.push_back(*it);
     }
     json["tags"] = jsonTags;
