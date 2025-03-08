@@ -69,9 +69,6 @@ int App::run(int argc, char *argv[]) {
           throw std::runtime_error("unknown action");
       }
       return 0;
-    } catch (std::invalid_argument &ex) {
-      std::cerr << "Error: invalid action argument(s)." << std::endl; 
-      return 1;
     } catch (...) {
       return 1;
     }
@@ -173,6 +170,7 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
   } else if (input == "json") {
     return Action::JSON;
   } else {
+    std::cerr << "Error: invalid action argument(s)." << std::endl;
     throw std::invalid_argument("action");
   }
 
@@ -233,18 +231,20 @@ std::string App::getJSON(ExpenseTracker &etObj,
                          const std::string &c,
                          const std::string &id) {
   try {
-    Category& category = etObj.getCategory(c);
-    try {
-      return category.getItem(id).str();
-    } catch (std::out_of_range &iex) {
-      std::cerr << "Error: invalid item argument(s)." << std::endl;
-      throw iex;
-    }
+    etObj.getCategory(c); 
   } catch (std::out_of_range &ex) {
     std::cerr << "Error: invalid category argument(s)." << std::endl;
     throw ex;
-  }
+  }    
   
+  try {
+    etObj.getCategory(c).getItem(id);
+  } catch (std::out_of_range &ex) {
+    std::cerr << "Error: invalid item argument(s)." << std::endl;
+    throw ex;
+  }
+
+  return etObj.getCategory(c).getItem(id).str();
 }
 
 double App::getSum(ExpenseTracker &et) {
@@ -264,18 +264,27 @@ double App::getSum(ExpenseTracker &et, const std::string &c) {
 
 void App::performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
   std::string output;
-  if (args.count("category")) {
-    const std::string category = args["category"].as<std::string>();
-    if (args.count("item")) {
-        const std::string item = args["item"].as<std::string>();
-        output = getJSON(et, category, item); 
+
+  // no args -> expense tracker
+  // just category -> category
+  // category and item -> item
+  // just item -> error.
+
+  if (args.count("item")) {
+    if (args.count("category")) {
+      const std::string item = args["item"].as<std::string>();
+      const std::string category = args["category"].as<std::string>();
+      std::cout << getJSON(et, category, item) << std::endl;
     } else {
-      output = getJSON(et, category); 
+      std::cerr << "Error: missing category argument(s)." << std::endl;
+      throw std::invalid_argument("item");
     }
+  } else if (args.count("category")) {
+    const std::string category = args["category"].as<std::string>();
+    std::cout << getJSON(et, category) << std::endl;
   } else {
-    output = getJSON(et); 
+    std::cout << getJSON(et) << std::endl;
   }
-  std::cout << output << std::endl; 
 }
 
 void App::performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
@@ -286,5 +295,10 @@ void App::performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
     std::cout << getSum(et) << std::endl;
   }
 }
+
+void performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
+
+}
+
 
 
