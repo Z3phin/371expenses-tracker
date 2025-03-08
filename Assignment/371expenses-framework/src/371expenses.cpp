@@ -42,9 +42,9 @@ int App::run(int argc, char *argv[]) {
     // Open the database and construct the ExpenseTracker
     const std::string db = args["db"].as<std::string>();
 
-    // ExpenseTracker etObj{};
+    ExpenseTracker etObj{};
     // Only uncomment this once you have implemented the load function!
-    // etObj.load(db);
+    etObj.load(db);
 
     // try parsing arguments and exit if there is an exception
     const Action a = parseActionArgument(args);
@@ -53,7 +53,7 @@ int App::run(int argc, char *argv[]) {
         throw std::runtime_error("create not implemented");
         break;
       case Action::JSON:
-        throw std::runtime_error("json not implemented");
+        performJsonAction(etObj, args);
         break;
       case Action::UPDATE:
         throw std::runtime_error("update not implemented");
@@ -183,9 +183,7 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
 //  ExpenseTracker etObj{};
 //  std::cout << getJSON(etObj);
 std::string App::getJSON(ExpenseTracker &etObj) {
-  return "{}";
-  // Only uncomment this once you have implemented the functions used!
-  // return etObj.str();
+  return etObj.str();
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the
@@ -202,10 +200,8 @@ std::string App::getJSON(ExpenseTracker &etObj) {
 //  std::string c = "category argument value";
 //  std::cout << getJSON(etObj, c);
 std::string App::getJSON(ExpenseTracker &etObj, const std::string &c) {
-  return "{}";
-  // Only uncomment this once you have implemented the functions used!
-  // auto cObj = etObj.getCategory(c);
-  // return cObj.str();
+  auto cObj = etObj.getCategory(c);
+  return cObj.str();
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the
@@ -225,8 +221,24 @@ std::string App::getJSON(ExpenseTracker &etObj, const std::string &c) {
 std::string App::getJSON(ExpenseTracker &etObj, 
                          const std::string &c,
                          const std::string &id) {
-  return "{}";
-  // Only uncomment this once you have implemented the functions used!
-  // auto iObj = etObj.getCategory(c).getItem(id);
-  // return iObj.str();
+  auto iObj = etObj.getCategory(c).getItem(id);
+  return iObj.str();
 }
+
+void App::performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
+  std::string output;
+  if (args.count("category")) {
+    const std::string category = args["category"].as<std::string>();
+    if (args.count("item")) {
+        const std::string item = args["item"].as<std::string>();
+        output = getJSON(et, category, item); 
+    } else {
+      output = getJSON(et, category); 
+    }
+  } else {
+    output = getJSON(et); 
+  }
+  std::cout << output << std::endl; 
+}
+
+
