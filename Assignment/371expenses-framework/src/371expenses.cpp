@@ -47,28 +47,35 @@ int App::run(int argc, char *argv[]) {
     etObj.load(db);
 
     // try parsing arguments and exit if there is an exception
-    const Action a = parseActionArgument(args);
-    switch (a) {
-      case Action::CREATE:
-        throw std::runtime_error("create not implemented");
-        break;
-      case Action::JSON:
-        performJsonAction(etObj, args);
-        break;
-      case Action::UPDATE:
-        throw std::runtime_error("update not implemented");
-        break;
-      case Action::DELETE:
-        throw std::runtime_error("delete not implemented");
-        break;
-      case Action::SUM:
-        throw std::runtime_error("sum not implemented");
-        break;
-      default:
-        throw std::runtime_error("unknown action");
+    try {
+      const Action a = parseActionArgument(args);
+      switch (a) {
+        case Action::CREATE:
+          throw std::runtime_error("create not implemented");
+          break;
+        case Action::JSON:
+          performJsonAction(etObj, args);
+          break;
+        case Action::UPDATE:
+          throw std::runtime_error("update not implemented");
+          break;
+        case Action::DELETE:
+          throw std::runtime_error("delete not implemented");
+          break;
+        case Action::SUM:
+          performSumAction(etObj, args);
+          break;
+        default:
+          throw std::runtime_error("unknown action");
+      }
+      return 0;
+    } catch (std::invalid_argument &ex) {
+      std::cerr << "Error: invalid action argument(s)." << std::endl; 
+      return 1;
+    } catch (...) {
+      return 1;
     }
-
-    return 0;
+    
 }
 
 // Create a cxxopts instance. You do not need to modify this function.
@@ -200,8 +207,12 @@ std::string App::getJSON(ExpenseTracker &etObj) {
 //  std::string c = "category argument value";
 //  std::cout << getJSON(etObj, c);
 std::string App::getJSON(ExpenseTracker &etObj, const std::string &c) {
-  auto cObj = etObj.getCategory(c);
-  return cObj.str();
+  try {
+    return etObj.getCategory(c).str();
+  } catch (std::out_of_range &ex) {
+    std::cerr << "Error: invalid category argument(s)." << std::endl;
+    throw ex;
+  }
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the
@@ -221,9 +232,35 @@ std::string App::getJSON(ExpenseTracker &etObj, const std::string &c) {
 std::string App::getJSON(ExpenseTracker &etObj, 
                          const std::string &c,
                          const std::string &id) {
-  auto iObj = etObj.getCategory(c).getItem(id);
-  return iObj.str();
+  try {
+    Category& category = etObj.getCategory(c);
+    try {
+      return category.getItem(id).str();
+    } catch (std::out_of_range &iex) {
+      std::cerr << "Error: invalid item argument(s)." << std::endl;
+      throw iex;
+    }
+  } catch (std::out_of_range &ex) {
+    std::cerr << "Error: invalid category argument(s)." << std::endl;
+    throw ex;
+  }
+  
 }
+
+double App::getSum(ExpenseTracker &et) {
+  return et.getSum();
+}
+
+double App::getSum(ExpenseTracker &et, const std::string &c) {
+  try {
+    return et.getCategory(c).getSum();
+  } catch (std::out_of_range &ex) {
+    std::cerr << "Error: invalid category argument(s)." << std::endl;
+    throw &ex; 
+  }
+}
+
+
 
 void App::performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
   std::string output;
@@ -239,6 +276,15 @@ void App::performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
     output = getJSON(et); 
   }
   std::cout << output << std::endl; 
+}
+
+void App::performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
+  if (args.count("category")) {
+    const std::string category = args["category"].as<std::string>();
+      std::cout << getSum(et, category) << std::endl;
+  } else {
+    std::cout << getSum(et) << std::endl;
+  }
 }
 
 

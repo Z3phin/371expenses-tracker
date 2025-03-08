@@ -52,7 +52,13 @@ std::string getJSON(ExpenseTracker &et);
 std::string getJSON(ExpenseTracker &et, const std::string &c);
 std::string getJSON(ExpenseTracker &et, const std::string &c, const std::string &id);
 
+double getSum(ExpenseTracker &et);
+
+double getSum(ExpenseTracker &et, const std::string &c);
+
 void performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args);
+void performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args);
+
 
 } // namespace App
 
