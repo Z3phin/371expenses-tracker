@@ -320,7 +320,7 @@ void ExpenseTracker::save(const std::string &filepath) const {
         throw std::runtime_error(filepath + " could not be opened successfully.");
     }
 
-    output << this->str();
+    output << this->to_json();
     output.close();
 }
 
