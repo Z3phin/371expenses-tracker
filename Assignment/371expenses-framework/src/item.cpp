@@ -95,7 +95,7 @@ bool Item::addTag(const std::string &tag) noexcept {
     if (!contains) {
         tags.push_back(tag);
     }
-    return contains;
+    return !contains;
 }
 
 /// @brief Deletes the provided tag from this Item's tags
