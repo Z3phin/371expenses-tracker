@@ -11,7 +11,7 @@
 #include "lib_json.hpp"
 #include <iostream>
 #include <iomanip>
-#include <sstream>
+#include <algorithm>
 
 // ------------------------------------------------
 //                  Constructors
@@ -91,8 +91,11 @@ void Item::setDate(Date _date) noexcept {
 /// @param tag tag to tbe added
 /// @return True if the tag was added, otherwise false 
 bool Item::addTag(const std::string &tag) noexcept {
-    auto result = this->tags.insert(tag);
-    return result.second;
+    bool contains = containsTag(tag);
+    if (!contains) {
+        tags.push_back(tag);
+    }
+    return contains;
 }
 
 /// @brief Deletes the provided tag from this Item's tags
@@ -100,9 +103,12 @@ bool Item::addTag(const std::string &tag) noexcept {
 /// @return True if this tag was deleted. 
 /// @throw std::out_of_range - thrown when the given tag does not exist.
 bool Item::deleteTag(const std::string &tag) {
-    if (!this->tags.erase(tag)) {
+    auto it = std::find(tags.begin(), tags.end(), tag);
+    if (it == tags.end()) {
         throw std::out_of_range("ERROR: Cannot delete " + tag + " from item " + this->identifier);
     }
+    
+    tags.erase(it);
     return true; 
 }
 
@@ -116,7 +122,7 @@ unsigned int Item::numTags() const noexcept {
 /// @param tag string to be checked. 
 /// @return True if the tag exists. Otherwise return false.
 bool Item::containsTag(const std::string &tag) const noexcept {
-    return tags.find(tag) != tags.end(); 
+    return std::find(tags.cbegin(), tags.cend(), tag) != tags.end(); 
 }
 
 /// @brief Merges the tags of another Item object with this object.
@@ -150,8 +156,12 @@ nlohmann::json Item::to_json() const noexcept {
     json["description"] = description;
     nlohmann::json jsonTags = nlohmann::json::array();
     for (auto it = tags.cbegin(); it != tags.cend(); it++) {
+
+        std::cout << *it << std::endl;
+
         jsonTags.push_back(*it);
     }
+    json["tags"] = jsonTags;
     return json; 
 }
 

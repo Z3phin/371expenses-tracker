@@ -16,7 +16,7 @@
 
 #include "date.h"
 #include "lib_json.hpp"
-#include <unordered_set>
+#include <vector>
 #include <string>
 
 class Item {
@@ -25,7 +25,7 @@ class Item {
         std::string description; 
         double amount; 
         Date date;
-        std::unordered_set<std::string> tags; 
+        std::vector<std::string> tags; 
 
     public:
         // TODO possibly some default constructors?
