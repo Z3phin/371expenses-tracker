@@ -260,7 +260,19 @@ double App::getSum(ExpenseTracker &et, const std::string &c) {
   }
 }
 
+Category& App::createCategory(ExpenseTracker &et, 
+                        const std::string &c) {
+    return et.newCategory(c);
+}
+Item& App::createItem(ExpenseTracker &et, 
+                const std::string &c,
+                const std::string &id,
+                const std::string &desc,
+                const double &amount) {
 
+    return et.newCategory(c).newItem(id, desc, amount, Date());
+
+}
 
 void App::performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
   std::string output;
@@ -296,8 +308,44 @@ void App::performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
   }
 }
 
-void performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
+void App::performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
+  if (args.count("category") && args.count("item") && args.count("desciption")
+      && args.count("amount") && args.count("date")) {
+        const std::string c = args["category"].as<std::string>();
+        const std::string id = args["item"].as<std::string>();
+        const std::string desc = args["description"].as<std::string>();
+        const std::string amountStr = args["amount"].as<std::string>();
 
+        double amount;
+        try {
+          amount = std::stod(amountStr);
+        } catch (const std::exception &e) {
+          std::cerr << "Error: invalid amount argument." << std::endl;
+          throw e;
+        } 
+
+        // new item and possibly category
+        Item& i = createItem(et, c, id, desc, amount);
+
+        if (args.count("date")) {
+          const std::string dateStr = args["date"].as<std::string>();
+          i.setDate(Date(dateStr));
+          // catch invalid_argument 
+        }
+
+        if (args.count("tag")) {
+          const std::string tags = args["tag"].as<std::string>();
+          // parse tags
+        }
+  } else if (args.count("category") && (!args.count("item") && !args.count("desciption")
+  && !args.count("amount") && !args.count("date"))) {
+      const std::string category = args["category"].as<std::string>();
+      createCategory(et, category);
+
+  } else {
+     std::cerr << "Error: missing category, item, amount, description argument(s)." << std::endl; 
+     throw std::invalid_argument("args");
+  }
 }
 
 
