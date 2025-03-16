@@ -41,7 +41,6 @@ class Item {
         /// @param _date date of this item. 
         Item(const std::string &_identifier, const std::string &_description, const double &_amount, const Date &_date) noexcept;
 
-
         // ------------------------------------------------
         //                      Getters
         // ------------------------------------------------
@@ -118,8 +117,8 @@ class Item {
         /// @return std::string of the JSON representation of the data in this Item.
         std::string str() const noexcept; 
 
-        nlohmann::json to_json() const noexcept;
-
+        friend void to_json(nlohmann::json& json, const Item& item) noexcept; 
+        friend void from_json(const nlohmann::json& json, Item& item); 
 
         // ------------------------------------------------
         //                    Operators 

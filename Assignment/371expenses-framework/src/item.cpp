@@ -146,22 +146,30 @@ void Item::mergeTags(const Item& other) noexcept {
 ///
 /// @return std::string of the JSON representation of the data in this Item.
 std::string Item::str() const noexcept {
-    return to_json().dump();
+    nlohmann::json json; 
+    to_json(json, *this);
+    return json.dump();
 }
 
-nlohmann::json Item::to_json() const noexcept {
-    nlohmann::json json = nlohmann::json::object();
-    json["amount"] = amount;
-    json["date"] = date.str();
-    json["description"] = description;
-    nlohmann::json jsonTags = nlohmann::json::array();
-    for (auto it = tags.cbegin(); it != tags.cend(); it++) {
-        jsonTags.push_back(*it);
+void to_json(nlohmann::json& json, const Item& item) noexcept {
+    json = nlohmann::json{{"amount", item.amount},
+                          {"date", item.date},
+                          {"description", item.description},
+                          {"tags", item.tags}};
+}
+
+void from_json(const nlohmann::json& json, Item& item) {
+    json.at("amount").get_to(item.amount);
+    json.at("date").get_to(item.date);
+    json.at("description").get_to(item.description);
+
+    std::vector<std::string> jsonTags;
+    json.at("tags").get_to(jsonTags);
+
+    for (auto it = jsonTags.cbegin(); it != jsonTags.cend(); it++) {
+        item.addTag(*it);
     }
-    json["tags"] = jsonTags;
-    return json; 
 }
-
 
 // ------------------------------------------------
 //                    Operators
