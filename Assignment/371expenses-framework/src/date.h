@@ -16,6 +16,7 @@
 #define DATE_H
 
 #include <string>
+#include "lib_json.hpp"
 
 class Date {
     private: 
@@ -87,6 +88,14 @@ class Date {
         /// @brief Returns this Date's day value.
         /// @return value representing the day of the month. (i.e. 1-31 depending on month)
         unsigned int getDay() const noexcept;
+
+        // ------------------------------------------------
+        //               JSON Representation 
+        // ------------------------------------------------
+
+        friend void to_json(nlohmann::json& json, const Date& date) noexcept;
+
+        friend void from_json(const nlohmann::json& json, Date& date) noexcept;
 
         // ------------------------------------------------
         //                    Operators 

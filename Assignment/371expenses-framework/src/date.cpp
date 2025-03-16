@@ -11,7 +11,7 @@
 #include <iostream>
 #include <ctime>
 #include <regex>
-#include <string>
+#include <sstream>
 
 // Possibly replace the checking for digits and format with regular expressions
 
@@ -103,9 +103,9 @@ Date::Date(const std::string &dateString)
 /// @brief Gives a string representation of this date in the format 'YYYY-MM-DD'.
 /// @return std::string represention of this date in the format 'YYYY-MM-DD'.
 std::string Date::str() const noexcept {
-    return std::to_string(this->year) 
-            + "-" + std::to_string(this->month)
-            + "-" + std::to_string(this->day);
+    std::stringstream ss; 
+    ss << this->year << "-" << this->month << "-" << this->day; 
+    return ss.str();
 }
 
 
@@ -173,7 +173,17 @@ unsigned int Date::getDay() const noexcept {
     return this->day;
 }
 
+// ------------------------------------------------
+//               JSON Representation 
+// ------------------------------------------------
 
+void to_json(nlohmann::json& json, const Date& date) noexcept {
+    json = nlohmann::json{date.str()};
+}
+
+void from_json(const nlohmann::json& json, Date& date) noexcept {
+    date.setDate(json.dump());
+}
 
 // ------------------------------------------------
 //                    Operators 
