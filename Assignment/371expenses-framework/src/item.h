@@ -28,8 +28,7 @@ class Item {
         std::vector<std::string> tags; 
 
     public:
-        // TODO possibly some default constructors?
-
+    
         // ------------------------------------------------
         //                  Constructors
         // ------------------------------------------------
@@ -75,7 +74,7 @@ class Item {
 
         /// @brief Updates the date belonging to this Item.
         /// @param _date new date for this item. 
-        void setDate(Date _date) noexcept;
+        void setDate(const Date &_date) noexcept;
     
 
         // ------------------------------------------------

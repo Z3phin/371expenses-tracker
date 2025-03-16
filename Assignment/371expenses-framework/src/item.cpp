@@ -79,7 +79,7 @@ void Item::setAmount(const double &_amount) noexcept {
 
 /// @brief Updates the date belonging to this Item.
 /// @param _date new date for this item. 
-void Item::setDate(Date _date) noexcept {
+void Item::setDate(const Date &_date) noexcept {
     this->date = _date; 
 }
 
