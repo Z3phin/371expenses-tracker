@@ -93,22 +93,8 @@ Date::Date(const unsigned int _year, const unsigned int _month, const unsigned i
 Date::Date(const std::string &dateString) 
     : year(0), month(0), day(0) {
 
-    std::regex dateRegex("([0-9]+)-([0-9]+)-([0-9]+)");
-    std::cmatch dateMatch;
-    std::regex_match(dateString.c_str(), dateMatch, dateRegex);
-
-    if (dateMatch.empty()) {
-        throw std::invalid_argument("ERROR: \'" + dateString + "\' is not of format YYYY-MM-DD.");
-    }
-
-    unsigned int yearInt = std::stoi(dateMatch[1]);
-    unsigned int monthInt = std::stoi(dateMatch[2]);
-    unsigned int dayInt = std::stoi(dateMatch[3]);
-
-    this->setDate(yearInt, monthInt, dayInt);
+    this->setDate(dateString);
 }
-
-
 
 // ------------------------------------------------
 //                String Representation
@@ -143,6 +129,24 @@ void Date::setDate(const unsigned int _year, const unsigned int _month, const un
         this->month = _month;
         this->day = _day;
     }
+}
+
+/// @brief Sets the date object to the given date as a string with the representation of YYYY-MM-DD.
+///        If the provided string is not in the correct format or invalid, an exception is thrown. 
+/// @param dateString date represented as a string to be converted (YYYY-MM-DD).
+/// @throws std::invalid_argument thrown when the provided dateStr is not valid or in the wrong format.
+void Date::setDate(const std::string &dateStr) {
+    std::regex dateRegex("([0-9]+)-([0-9]+)-([0-9]+)");
+    std::cmatch dateMatch;
+    std::regex_match(dateStr.c_str(), dateMatch, dateRegex);
+
+    if (dateMatch.empty()) {
+        throw std::invalid_argument("ERROR: \'" + dateStr + "\' is not of format YYYY-MM-DD.");
+    }
+
+    this->setDate(std::stoi(dateMatch[1]),  // year
+                  std::stoi(dateMatch[2]),  // month
+                  std::stoi(dateMatch[3])); // dat
 }
 
 

@@ -65,6 +65,12 @@ class Date {
         /// @param _day day of the month (1-28/29/30/31 depending on month and year) to be represented
         void setDate(const unsigned int _year, const unsigned int _month, const unsigned int _day);
 
+        /// @brief Sets the Date object to the date given as a string with the representation of YYYY-MM-DD.
+        ///        If the provided string is not in the correct format or invalid, an exception is thrown. 
+        /// @param dateString date represented as a string to be converted (YYYY-MM-DD).
+        /// @throws std::invalid_argument thrown when the provided dateStr is not valid or in the wrong format.
+        void setDate(const std::string &dateStr);
+
 
         // ------------------------------------------------
         //                      Getters
@@ -81,7 +87,6 @@ class Date {
         /// @brief Returns this Date's day value.
         /// @return value representing the day of the month. (i.e. 1-31 depending on month)
         unsigned int getDay() const noexcept;
-
 
         // ------------------------------------------------
         //                    Operators 
