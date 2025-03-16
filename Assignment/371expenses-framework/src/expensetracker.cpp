@@ -118,6 +118,7 @@ Category& ExpenseTracker::newCategory(const std::string &categoryIdent) {
 bool ExpenseTracker::addCategory(const Category &category) {
     auto it = categoryMap.find(category.getIdent());
     if (it == categoryMap.end()) {
+        // TODO Replace with move? 
         Category* c = new Category(category.getIdent());
         c->mergeItems(category);
         try {

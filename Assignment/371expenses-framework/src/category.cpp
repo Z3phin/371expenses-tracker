@@ -166,6 +166,8 @@ bool Category::addItem(const Item &item) noexcept {
     bool contains = (it != itemMap.end());
     
     if (contains) {
+
+        // TODO Replace with move constructor
         auto pItem = it->second; 
 
         pItem->mergeTags(item);

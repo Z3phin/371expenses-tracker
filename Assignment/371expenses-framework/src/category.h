@@ -22,6 +22,7 @@
 class Category {
     private:
         std::string ident;  
+        // TODO Unique pointer?
         std::map<const std::string, Item*> itemMap;      
     
     public:
