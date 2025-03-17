@@ -105,7 +105,7 @@ bool Item::addTag(const std::string &tag) noexcept {
 bool Item::deleteTag(const std::string &tag) {
     auto it = std::find(tags.begin(), tags.end(), tag);
     if (it == tags.end()) {
-        throw std::out_of_range("ERROR: Cannot delete " + tag + " from item " + this->identifier);
+        throw std::out_of_range("tag");
     }
     
     tags.erase(it);
