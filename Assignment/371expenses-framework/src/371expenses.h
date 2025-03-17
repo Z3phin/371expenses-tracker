@@ -66,6 +66,11 @@ Item& createItem(ExpenseTracker &et,
 
 void addTags(const std::string& tagList, Item& item);
 
+bool remove(ExpenseTracker& et, std::string& category);
+bool remove(ExpenseTracker& et, std::string& category, std::string& item);
+bool remove(ExpenseTracker& et, std::string& category, std::string& item, std::string &tag);
+
+
 void performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 void performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 void performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args);

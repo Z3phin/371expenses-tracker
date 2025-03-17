@@ -368,5 +368,15 @@ void App::performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
   }
 }
 
+bool App::remove(ExpenseTracker& et, std::string& category) {
+  return et.deleteCategory(category);
+}
+bool App::remove(ExpenseTracker& et, std::string& category, std::string& item) {
+  return et.getCategory(category).deleteItem(item);
+}
+bool App::remove(ExpenseTracker& et, std::string& category, std::string& item, std::string& tag) {
+  return et.getCategory(category).getItem(item).deleteTag(tag);
+}
+
 
 
