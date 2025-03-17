@@ -338,10 +338,12 @@ void to_json(nlohmann::json& json, const Category& category) noexcept {
 void from_json(const nlohmann::json &json, Category& category) {
     for (auto it = json.cbegin(); it != json.cend(); it++) {
 
-        // idk im too drunk to do it
         nlohmann::json jsonItem = it.value();
+        
         Item i = Item(it.key(), "", 0, Date());
+
         to_json(jsonItem, i);
+
         category.addItem(i);
     }    
 }
