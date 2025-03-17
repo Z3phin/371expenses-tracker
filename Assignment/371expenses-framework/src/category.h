@@ -18,12 +18,12 @@
 #include "date.h"
 #include <string>
 #include <map>
+#include <memory>
 
 class Category {
     private:
         std::string ident;  
-        // TODO Unique pointer?
-        std::map<const std::string, Item*> itemMap;      
+        std::map<const std::string, std::shared_ptr<Item>> itemMap;      
     
     public:
 
@@ -33,7 +33,7 @@ class Category {
 
         /// @brief Constructor for category. 
         /// @param _ident Category identifier.
-        Category(const std::string &_ident) noexcept; 
+        Category(const std::string& _ident) noexcept; 
 
         // ------------------------------------------------
         //                  Deconstructor
@@ -60,7 +60,7 @@ class Category {
 
         /// @brief Updates the category identifier to a new identifier. 
         /// @param _ident New identifier for category. 
-        void setIdent(const std::string &_ident) noexcept;
+        void setIdent(const std::string& _ident) noexcept;
 
         // ------------------------------------------------
         //                  Item Operations
@@ -136,21 +136,8 @@ class Category {
         /// @return JSON representation of this Category
         std::string str() const noexcept;
 
-        nlohmann::json to_json() const noexcept;
-
-        /// @brief Attempts to load a json object of Items into this category. 
-        /// Any item objects that are not of the expected format and types are ignored.
-        /// @param json json object to load items from.
-        void from_json(const nlohmann::json &json);
-
-        /// @brief Loads an Item into the Category based on the json object given with the given
-        /// identifier, only if the json object is of expected format with valid types, otherwise 
-        /// it is not added
-        /// @param itemIdent 
-        /// @param json 
-        void loadJsonItem(const std::string &itemIdent, const nlohmann::json &json);
-
-        
+        friend void to_json(nlohmann::json& json, const Category& category) noexcept;
+        friend void from_json(const nlohmann::json &json, Category& category);
 };
 
 #endif // CATEGORY_H

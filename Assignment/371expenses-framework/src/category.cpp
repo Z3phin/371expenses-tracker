@@ -36,13 +36,7 @@ Category::Category(const std::string &_ident) noexcept : ident(_ident), itemMap(
 // ------------------------------------------------
 
 /// @brief Deconstructor for category object. 
-Category::~Category() {
-    // Delete all the pointers to items contained in the map.
-    for (auto it = itemMap.begin(); it != itemMap.end(); it++) {
-        delete it->second;
-        it->second = nullptr;
-    }
-}
+Category::~Category() {}
 
 // ------------------------------------------------
 //          Category Properties Functions
@@ -119,21 +113,18 @@ Item& Category::newItem(const std::string &_identifier,
                         const Date &_date) {
     
 
-        Item* pNewItem = new Item(_identifier, _description, _amount, _date);
-        
+        std::shared_ptr<Item> pNewItem(new Item(_identifier, _description, _amount, _date));
+
         try {
-            
             auto result = itemMap.emplace(std::make_pair(_identifier, pNewItem));
 
             auto it = itemMap.find(_identifier);
             if (result.second == false) {
-                delete it->second; 
                 it->second = pNewItem;
             }
             return *(it->second);
 
         } catch (...) { // What would go wrong? 
-            delete pNewItem;
             throw std::runtime_error("Something went wrong");
         }
 
@@ -175,11 +166,8 @@ bool Category::addItem(const Item &item) noexcept {
         pItem->setAmount(item.getAmount());
         pItem->setDate(item.getDate());
     } else {
-        Item* pNewItem = new Item(item.getIdent(), 
-                                  item.getDescription(),
-                                  item.getAmount(),
-                                  item.getDate());
-        pNewItem->mergeTags(item);
+        std::shared_ptr<Item> pNewItem(new Item(item));
+        // pNewItem->mergeTags(item);
         itemMap.insert(std::make_pair(item.getIdent(), pNewItem));
     }
 
@@ -228,8 +216,7 @@ Item& Category::getItem(const std::string identifier) const {
 double Category::getSum() const noexcept {
     double sum = 0;
     for (const auto pair: itemMap) {
-        Item* pItem = pair.second;
-        sum += pItem->getAmount();
+        sum += pair.second->getAmount();
     }
     return sum; 
 }
@@ -255,8 +242,6 @@ bool Category::deleteItem(const std::string &_identifier) {
         throw std::out_of_range(_identifier + " does not exist in Category " + this->getIdent());
     }
 
-    delete it->second; // Delete item pointer
-    it->second = nullptr; 
     itemMap.erase(it);
     return true; 
 }
@@ -337,84 +322,26 @@ bool operator!=(const Category &lhs, const Category &rhs) noexcept {
 ///
 /// @return JSON representation of this Category
 std::string Category::str() const noexcept {
-    return to_json().dump();
+    nlohmann::json categoryJson;
+    to_json(categoryJson, *this);
+    return categoryJson.dump();
 }
 
-nlohmann::json Category::to_json() const noexcept {
-    nlohmann::json json = nlohmann::json::object();
-    for (auto it = itemMap.cbegin(); it != itemMap.cend(); it++) {
-        json[it->first] = it->second->to_json();   
+void to_json(nlohmann::json& json, const Category& category) noexcept {
+    for (auto it = category.itemMap.cbegin(); it != category.itemMap.cend(); it++) {
+        nlohmann::json itemJson = nlohmann::json::object();
+        to_json(itemJson, *(it->second));
+        json[it->first] = itemJson; 
     }
-    return json; 
-}
+ }
 
-/// @brief Attempts to load a json object of Items into this category. 
-/// Any item objects that are not of the expected format and types are ignored.
-/// @param json json object to load items from.
-void Category::from_json(const nlohmann::json &json) {
-    if (!json.is_object()) {
-        return;
-    }
-
+void from_json(const nlohmann::json &json, Category& category) {
     for (auto it = json.cbegin(); it != json.cend(); it++) {
-        loadJsonItem(it.key(), it.value());
-    }
-}
 
-/// @brief Loads an Item into the Category based on the json object given with the given
-/// identifier, only if the json object is of expected format with valid types, otherwise 
-/// it is not added
-/// @param itemIdent 
-/// @param json 
-void Category::loadJsonItem(const std::string &itemIdent, const nlohmann::json &json) {
-    if (!json.is_object()) {
-        return; // Possibly throw error (or this could return a bool)
-    }
-
-    if (json.size() != 4 
-    || !json.contains("amount") 
-        || !json.contains("date") 
-        || !json.contains("description")
-        || !json.contains("tags")) {
-            return; // Possibly throw error or return false
-    }
-
-    auto amountJson = json.at("amount");
-    auto dateStrJson = json.at("date");
-    auto descriptionJson = json.at("description");
-    auto tagsJson = json.at("tags");
-
-    if (!amountJson.is_number() 
-        || !dateStrJson.is_string() 
-        || !descriptionJson.is_string()
-        || !tagsJson.is_array()) {
-            return; // possibly throw error or return false
-    }
-
-    for (auto tagsJsonIt = tagsJson.cbegin();
-         tagsJsonIt != tagsJson.cend();
-         tagsJsonIt++) {
-
-        if (!tagsJsonIt->is_string()) {
-            return; // Ignore invalid data
-        }
-    }
-
-    auto amount = amountJson.get<double>();
-    auto dateStr = dateStrJson.get<std::string>();
-    auto description = descriptionJson.get<std::string>();
-    auto tags = tagsJson.get<std::set<std::string>>();
-
-    Date date;
-    try {
-        date = Date(dateStr);
-    } catch (std::invalid_argument &ex) {
-        return; // Ignore object
-    }
-    Item& i = this->newItem(itemIdent, description, amount, date);
-
-    // Add each tag to the item.
-    for (auto tagIt = tags.cbegin(); tagIt != tags.cend(); tagIt++) {
-        i.addTag(*tagIt);
-    }
+        // idk im too drunk to do it
+        nlohmann::json jsonItem = it.value();
+        Item i = Item(it.key(), "", 0, Date());
+        to_json(jsonItem, i);
+        category.addItem(i);
+    }    
 }
