@@ -11,11 +11,8 @@
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
-#include <string>
 #include <sstream>
 #include <utility>
-
-
 
 // ------------------------------------------------
 //                  Constructor
@@ -36,12 +33,7 @@ ExpenseTracker::ExpenseTracker() : categoryMap({}) {}
 // ------------------------------------------------
 
 /// @brief Desconstructs the ExpenseTracker object
-ExpenseTracker::~ExpenseTracker() {
-    for (auto it = categoryMap.begin(); it != categoryMap.end(); it++) {
-        delete it->second;
-        it->second = nullptr;
-    }
-}
+ExpenseTracker::~ExpenseTracker() {}
 
 // ------------------------------------------------
 //                  Property Functions
@@ -86,12 +78,11 @@ Category& ExpenseTracker::newCategory(const std::string &categoryIdent) {
         return *(it->second);
     }
 
-    Category* c = new Category(categoryIdent);
     try {
-        categoryMap.insert(std::make_pair(categoryIdent, c));
-        return *c; 
+        std::shared_ptr<Category> pNewCategory(new Category(categoryIdent));
+        categoryMap.insert(std::make_pair(categoryIdent, pNewCategory));
+        return *pNewCategory; 
     } catch (...) {
-        delete c; 
         throw std::runtime_error("Something went wrong!");
     }
 
@@ -117,19 +108,20 @@ Category& ExpenseTracker::newCategory(const std::string &categoryIdent) {
 /// @throws std::runtime_error exception if the operation was unsuccessful for some reason.
 bool ExpenseTracker::addCategory(const Category &category) {
     auto it = categoryMap.find(category.getIdent());
-    if (it == categoryMap.end()) {
-        // TODO Replace with move? 
-        Category* c = new Category(category.getIdent());
-        c->mergeItems(category);
-        try {
-            categoryMap.insert(std::make_pair(c->getIdent(), c));
-            return true;
-        } catch (...) {
-            throw std::runtime_error("Something went wrong");
-        }
+    if (it != categoryMap.end()) {
+        it->second->mergeItems(category);
+        return false;
     }
-    it->second->mergeItems(category);
-    return false; 
+
+    try {
+        std::shared_ptr<Category> pNewItem(new Category(category));
+        categoryMap.insert(std::make_pair(category.getIdent(), pNewItem));
+        return true;
+    } catch (...) {
+        throw std::runtime_error("Something went wrong");
+    }
+
+     
 }      
 
 
@@ -178,8 +170,6 @@ bool ExpenseTracker::deleteCategory(const std::string &categoryIdentifier) {
         throw std::out_of_range(categoryIdentifier + " was not found in ExpenseTracker object");
     }   
     
-    delete it->second;
-    it->second = nullptr;
     categoryMap.erase(it);
     return true; 
 }
@@ -291,12 +281,7 @@ void ExpenseTracker::load(const std::string &database) {
     }
 
     nlohmann::json j = nlohmann::json::parse(inputFileStream);
-   
-    for (auto it = j.cbegin(); it != j.cend(); it++) { // iterates through categories
-        if (it.value().is_object()) {
-            newCategory(it.key()).from_json(it.value());
-        }
-    } 
+    from_json(j, *this);
     inputFileStream.close();
 }
 
@@ -321,7 +306,7 @@ void ExpenseTracker::save(const std::string &filepath) const {
         throw std::runtime_error(filepath + " could not be opened successfully.");
     }
 
-    output << this->to_json();
+    output << this->str();
     output.close();
 }
 
@@ -388,14 +373,27 @@ bool operator!=(const ExpenseTracker &lhs, const ExpenseTracker &rhs) noexcept {
 /// @brief Returns a JSON formatted string representation of the ExpenseTracker object.
 /// @return JSON formatted string representation of the object. 
 std::string ExpenseTracker::str() const noexcept {
-    return to_json().dump();
+    nlohmann::json json;
+    to_json(json, *this);
+    return json.dump();
 }
 
-nlohmann::json ExpenseTracker::to_json() const noexcept {
-    nlohmann::json json = nlohmann::json::object();
-    for (auto it = categoryMap.cbegin(); it != categoryMap.cend(); it++) {
-        json[it->first] = it->second->to_json();
-    }   
-    return json;
+void to_json(nlohmann::json& json, const ExpenseTracker& et) noexcept {
+    for (auto it = et.categoryMap.cbegin(); it != et.categoryMap.cend(); it++) {
+        nlohmann::json categoryJson = nlohmann::json::object();
+        to_json(categoryJson, *(it->second));
+        json[it->first] = categoryJson; 
+    }
 }
+
+void from_json(const nlohmann::json& json, ExpenseTracker& et) {
+    for (auto it = json.cbegin(); it != json.cend(); it++) {
+
+        nlohmann::json categoryJson = it.value();
+        Category c = Category(it.key());
+        from_json(categoryJson, c);
+        et.addCategory(c);
+    }
+}
+
 

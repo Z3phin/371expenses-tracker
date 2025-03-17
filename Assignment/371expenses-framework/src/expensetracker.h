@@ -17,10 +17,11 @@
 #include "category.h"
 #include <string>
 #include <map>
+#include <memory>
 
 class ExpenseTracker {
     private:
-        std::map<std::string, Category*> categoryMap;
+        std::map<std::string, std::shared_ptr<Category>> categoryMap;
     public: 
 
         // ------------------------------------------------
@@ -123,7 +124,8 @@ class ExpenseTracker {
         /// @return JSON formatted string representation of the object. 
         std::string str() const noexcept;
 
-        nlohmann::json to_json() const noexcept;
+        friend void to_json(nlohmann::json& json, const ExpenseTracker& et) noexcept;
+        friend void from_json(const nlohmann::json& json, ExpenseTracker& et);
 
         // ------------------------------------------------
         //               Helper Functions

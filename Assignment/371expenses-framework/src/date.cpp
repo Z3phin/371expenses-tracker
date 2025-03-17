@@ -178,11 +178,13 @@ unsigned int Date::getDay() const noexcept {
 // ------------------------------------------------
 
 void to_json(nlohmann::json& json, const Date& date) noexcept {
-    json = nlohmann::json{date.str()};
+    json = date.str();
 }
 
 void from_json(const nlohmann::json& json, Date& date) noexcept {
-    date.setDate(json.dump());
+    std::string dateStr;
+    json.get_to(dateStr);
+    date.setDate(dateStr);
 }
 
 // ------------------------------------------------
