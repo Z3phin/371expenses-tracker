@@ -51,7 +51,8 @@ int App::run(int argc, char *argv[]) {
       const Action a = parseActionArgument(args);
       switch (a) {
         case Action::CREATE:
-          throw std::runtime_error("create not implemented");
+          performCreateAction(etObj, args);
+          etObj.save(db);
           break;
         case Action::JSON:
           performJsonAction(etObj, args);
@@ -264,6 +265,7 @@ Category& App::createCategory(ExpenseTracker &et,
                         const std::string &c) {
     return et.newCategory(c);
 }
+
 Item& App::createItem(ExpenseTracker &et, 
                 const std::string &c,
                 const std::string &id,
@@ -308,9 +310,17 @@ void App::performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
   }
 }
 
+void App::addTags(const std::string& tagList, Item& item) {
+  std::istringstream iss(tagList);
+  std::string tag;
+  while (std::getline(iss, tag, ',')) {
+    item.addTag(tag);
+  }  
+}
+
 void App::performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
-  if (args.count("category") && args.count("item") && args.count("desciption")
-      && args.count("amount") && args.count("date")) {
+  if (args.count("category") && args.count("item") && args.count("description")
+      && args.count("amount")) {
         const std::string c = args["category"].as<std::string>();
         const std::string id = args["item"].as<std::string>();
         const std::string desc = args["description"].as<std::string>();
@@ -329,16 +339,26 @@ void App::performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
 
         if (args.count("date")) {
           const std::string dateStr = args["date"].as<std::string>();
-          i.setDate(Date(dateStr));
-          // catch invalid_argument 
+          try {
+            i.setDate(Date(dateStr));
+          } catch(const std::invalid_argument& e) { 
+            std::cerr << "Error: invalid date argument." << std::endl;
+            throw e;
+          } 
         }
 
         if (args.count("tag")) {
           const std::string tags = args["tag"].as<std::string>();
-          // parse tags
+          addTags(tags, i);
         }
-  } else if (args.count("category") && (!args.count("item") && !args.count("desciption")
-  && !args.count("amount") && !args.count("date"))) {
+
+  } else if (args.count("category") 
+             && (!args.count("item") 
+                 && !args.count("desciption")
+                 && !args.count("amount") 
+                 && !args.count("date") 
+                 && (!args.count("tag")))) {
+
       const std::string category = args["category"].as<std::string>();
       createCategory(et, category);
 

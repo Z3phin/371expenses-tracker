@@ -57,12 +57,14 @@ double getSum(ExpenseTracker &et, const std::string &c);
 
 Category& createCategory(ExpenseTracker &et, 
                     const std::string &c);      
+
 Item& createItem(ExpenseTracker &et, 
                 const std::string &c,
                 const std::string &id,
                 const std::string &desc,
                 const double &amount);
 
+void addTags(const std::string& tagList, Item& item);
 
 void performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 void performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args);
