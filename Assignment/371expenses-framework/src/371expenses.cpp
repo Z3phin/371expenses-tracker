@@ -58,10 +58,11 @@ int App::run(int argc, char *argv[]) {
           performJsonAction(etObj, args);
           break;
         case Action::UPDATE:
-          throw std::runtime_error("update not implemented");
+          throw std::runtime_error("update not implemented"); // TODO
           break;
         case Action::DELETE:
-          throw std::runtime_error("delete not implemented");
+          performDeleteAction(etObj, args);
+          etObj.save(db);
           break;
         case Action::SUM:
           performSumAction(etObj, args);
@@ -368,14 +369,85 @@ void App::performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
   }
 }
 
-bool App::remove(ExpenseTracker& et, std::string& category) {
-  return et.deleteCategory(category);
+bool App::remove(ExpenseTracker& et, const std::string& category) {
+  try {
+    return et.deleteCategory(category);
+  } catch(std::out_of_range& ex) {
+    std::cerr << "Error: invalid category argument(s)." << std::endl;
+    throw &ex; 
+  }
+  
 }
-bool App::remove(ExpenseTracker& et, std::string& category, std::string& item) {
-  return et.getCategory(category).deleteItem(item);
+bool App::remove(ExpenseTracker& et, const std::string& category, const std::string& item) {
+  // TODO REPLACE EACH TRY-CATCH BLOCK WITH ONE! CHANGE THE ERROR MESSAGE FOR OUT_OF_RANGE TO BE category, item OR tag!
+  try {
+    et.getCategory(category);
+  } catch(std::out_of_range& ex) {
+    std::cerr << "Error: invalid category argument(s)." << std::endl;
+    throw ex; 
+  }
+
+  try {
+    return et.getCategory(category).deleteItem(item);
+  } catch(std::out_of_range& ex) {
+    std::cerr << "Error: invalid item argument(s)." << std::endl;
+    throw ex; 
+  }
 }
-bool App::remove(ExpenseTracker& et, std::string& category, std::string& item, std::string& tag) {
-  return et.getCategory(category).getItem(item).deleteTag(tag);
+bool App::remove(ExpenseTracker& et, const std::string& category, const std::string& item, const std::string& tag) {
+  try {
+    et.getCategory(category);
+  } catch(std::out_of_range& ex) {
+    std::cerr << "Error: invalid category argument(s)." << std::endl;
+    throw ex; 
+  }
+
+  try {
+    et.getCategory(category).getItem(item);
+  } catch(std::out_of_range& ex) {
+    std::cerr << "Error: invalid item argument(s)." << std::endl;
+    throw ex; 
+  }
+
+  try {
+    return et.getCategory(category).getItem(item).deleteTag(tag);
+  } catch(std::out_of_range& ex) {
+    std::cerr << "Error: invalid tag argument(s)." << std::endl;
+    throw ex;
+  }
+}
+
+void App::performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
+  
+  // Delete tag
+  if (args.count("category") && args.count("item") && args.count("tag") 
+      && !args.count("desciption") && !args.count("amount") && !args.count("date") ) {
+
+        const std::string c = args["category"].as<std::string>();
+        const std::string i = args["item"].as<std::string>();
+        const std::string t = args["tag"].as<std::string>();
+         
+        remove(et, c, i, t);
+
+  } else if (args.count("category") && args.count("item") && !args.count("tag")
+             && !args.count("desciption") && !args.count("amount") && !args.count("date")) { // Delete item
+
+        const std::string c = args["category"].as<std::string>();
+        const std::string i = args["item"].as<std::string>();
+          
+        remove(et, c, i);
+
+  } else if (args.count("category") && !args.count("item") && !args.count("tag")
+             && !args.count("desciption") && !args.count("amount") && !args.count("date")) { // Delete category
+
+        const std::string c = args["category"].as<std::string>();
+         
+        remove(et, c);
+
+  } else {       // Handle bad arguments 
+    std::cerr << "Error: missing category, item, tag." << std::endl; 
+    throw std::invalid_argument("args");
+  } 
 }
 
 
