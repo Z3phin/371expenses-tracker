@@ -340,7 +340,7 @@ void from_json(const nlohmann::json &json, Category& category) {
 
         Item i = Item(it.key(), "", 0, Date());
 
-        to_json(jsonItem, i);
+        from_json(jsonItem, i);
 
         category.addItem(i);
     }    
