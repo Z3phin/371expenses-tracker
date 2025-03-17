@@ -70,6 +70,22 @@ bool remove(ExpenseTracker& et, const std::string& category);
 bool remove(ExpenseTracker& et, const std::string& category, const std::string& item);
 bool remove(ExpenseTracker& et, const std::string& category, const std::string& item, const std::string &tag);
 
+// Update category identifier
+void update(ExpenseTracker& et, const std::string& oldCategoryIdent, const std::string& newCategoryIdent);
+
+// update item description
+void update(ExpenseTracker& et, const std::string& category, const std::string& item, const std::string& description);
+
+// updates item amount
+void update(ExpenseTracker& et, const std::string& category, const std::string& item, const double& amount);
+
+// update item date
+void update(ExpenseTracker& et, const std::string& category, const std::string& item, const Date& date);
+
+
+
+
+
 
 void performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 void performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args);

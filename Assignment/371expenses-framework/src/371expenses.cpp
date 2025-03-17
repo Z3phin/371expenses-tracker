@@ -444,11 +444,75 @@ void App::performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
          
         remove(et, c);
 
-  } else {       // Handle bad arguments 
-    std::cerr << "Error: missing category, item, tag." << std::endl; 
-    throw std::invalid_argument("args");
+  } else if (!args.count("category") && !args.count("item") && !args.count("tag")) {       // Handle bad arguments 
+      std::cerr << "Error: missing category, item, or tag argument(s)." << std::endl; 
+      throw std::invalid_argument("args");
   } 
 }
 
+// Update category identifier
+void App::update(ExpenseTracker& et, const std::string& oldCategoryIdent, const std::string& newCategoryIdent) {
+  try {
+    Category& category = et.getCategory(oldCategoryIdent);
+    et.deleteCategory(oldCategoryIdent);
+    category.setIdent(newCategoryIdent);
+    et.addCategory(category);
+  } catch (const std::out_of_range &ex) {
+    std::cerr << "Error: invalid category argument(s)." << std::endl;
+    throw ex; 
+  }
+}
 
+// update item description
+void App::update(ExpenseTracker& et, const std::string& category, const std::string& item, const std::string& description) {
+  try {
+    et.getCategory(category);
+  } catch (const std::out_of_range &ex) {
+    std::cerr << "Error: invalid category argument(s)." << std::endl;
+    throw ex; 
+  }
+
+  try {
+    et.getCategory(category).getItem(item).setDescription(description);
+  } catch (const std::out_of_range &ex) {
+    std::cerr << "Error: invalid item argument(s)." << std::endl;
+    throw ex; 
+  }
+
+}
+
+// updates item amount
+void App::update(ExpenseTracker& et, const std::string& category, const std::string& item, const double& amount) {
+  try {
+    et.getCategory(category);
+  } catch (const std::out_of_range &ex) {
+    std::cerr << "Error: invalid category argument(s)." << std::endl;
+    throw ex; 
+  }
+
+  try {
+    et.getCategory(category).getItem(item).setAmount(amount);
+  } catch (const std::out_of_range &ex) {
+    std::cerr << "Error: invalid item argument(s)." << std::endl;
+    throw ex; 
+  }
+
+}
+
+// update item date
+void App::update(ExpenseTracker& et, const std::string& category, const std::string& item, const Date& date) {
+  try {
+    et.getCategory(category);
+  } catch (const std::out_of_range &ex) {
+    std::cerr << "Error: invalid category argument(s)." << std::endl;
+    throw ex; 
+  }
+
+  try {
+    et.getCategory(category).getItem(item).setDate(date);
+  } catch (const std::out_of_range &ex) {
+    std::cerr << "Error: invalid item argument(s)." << std::endl;
+    throw ex; 
+  }
+}
 
