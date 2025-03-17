@@ -382,7 +382,7 @@ void to_json(nlohmann::json& json, const ExpenseTracker& et) noexcept {
     for (auto it = et.categoryMap.cbegin(); it != et.categoryMap.cend(); it++) {
         nlohmann::json categoryJson = nlohmann::json::object();
         to_json(categoryJson, *(it->second));
-        json[it->first] = categoryJson; 
+        json[it->second->getIdent()] = categoryJson; 
     }
 }
 

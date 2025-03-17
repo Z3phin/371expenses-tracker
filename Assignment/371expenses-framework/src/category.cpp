@@ -329,7 +329,7 @@ void to_json(nlohmann::json& json, const Category& category) noexcept {
     for (auto it = category.itemMap.cbegin(); it != category.itemMap.cend(); it++) {
         nlohmann::json itemJson = nlohmann::json::object();
         to_json(itemJson, *(it->second));
-        json[it->first] = itemJson; 
+        json[it->second->getIdent()] = itemJson; 
     }
  }
 
