@@ -112,10 +112,8 @@ Item& Category::newItem(const std::string &_identifier,
                         const double &_amount,
                         const Date &_date) {
     
-
-        std::shared_ptr<Item> pNewItem(new Item(_identifier, _description, _amount, _date));
-
         try {
+            std::shared_ptr<Item> pNewItem(new Item(_identifier, _description, _amount, _date));
             auto result = itemMap.emplace(std::make_pair(_identifier, pNewItem));
 
             auto it = itemMap.find(_identifier);
@@ -339,7 +337,7 @@ void from_json(const nlohmann::json &json, Category& category) {
     for (auto it = json.cbegin(); it != json.cend(); it++) {
 
         nlohmann::json jsonItem = it.value();
-        
+
         Item i = Item(it.key(), "", 0, Date());
 
         to_json(jsonItem, i);
