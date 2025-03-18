@@ -82,15 +82,11 @@ void update(ExpenseTracker& et, const std::string& category, const std::string& 
 // update item date
 void update(ExpenseTracker& et, const std::string& category, const std::string& item, const Date& date);
 
-
-
-
-
-
 void performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 void performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 void performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 void performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args);
+void performUpdateAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 
 
 } // namespace App

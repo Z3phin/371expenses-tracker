@@ -146,7 +146,7 @@ void Date::setDate(const std::string &dateStr) {
 
     this->setDate(std::stoi(dateMatch[1]),  // year
                   std::stoi(dateMatch[2]),  // month
-                  std::stoi(dateMatch[3])); // dat
+                  std::stoi(dateMatch[3])); // day
 }
 
 

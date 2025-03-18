@@ -58,7 +58,8 @@ int App::run(int argc, char *argv[]) {
           performJsonAction(etObj, args);
           break;
         case Action::UPDATE:
-          throw std::runtime_error("update not implemented"); // TODO
+          performUpdateAction(etObj, args);
+          etObj.save(db);
           break;
         case Action::DELETE:
           performDeleteAction(etObj, args);
@@ -448,12 +449,13 @@ void App::performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
       std::cerr << "Error: missing category, item, or tag argument(s)." << std::endl; 
       throw std::invalid_argument("args");
   } 
+  // Otherwise, other arguments are ignored. 
 }
 
 // Update category identifier
 void App::update(ExpenseTracker& et, const std::string& oldCategoryIdent, const std::string& newCategoryIdent) {
   try {
-    Category& category = et.getCategory(oldCategoryIdent);
+    Category category = et.getCategory(oldCategoryIdent);
     et.deleteCategory(oldCategoryIdent);
     category.setIdent(newCategoryIdent);
     et.addCategory(category);
@@ -514,5 +516,74 @@ void App::update(ExpenseTracker& et, const std::string& category, const std::str
     std::cerr << "Error: invalid item argument(s)." << std::endl;
     throw ex; 
   }
+}
+
+void App::performUpdateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
+  // update item 
+  if (args.count("category") && args.count("item")) {
+    // throw an error if it does not have description, amount or date
+
+    if (!(args.count("description") || args.count("amount") || args.count("date"))) {
+      std::cerr << "Error: missing description, amount, or date argument(s)." << std::endl; 
+      throw std::invalid_argument("args");
+    }
+
+    const std::string c = args["category"].as<std::string>();
+    const std::string i = args["item"].as<std::string>();
+
+    if (args.count("amount")) {
+      const std::string amountStr = args["amount"].as<std::string>();
+      double amount;
+      try {
+        amount = std::stod(amountStr);
+      } catch (const std::exception &e) {
+        std::cerr << "Error: invalid amount argument." << std::endl;
+        throw e;
+      }
+
+      update(et, c, i, amount);      
+
+    }
+
+    if (args.count("date")) {
+      const std::string dateStr = args["date"].as<std::string>();
+      Date date;
+      try {
+        date = Date(dateStr);
+      } catch (const std::exception &e) {
+        std::cerr << "Error: invalid date argument." << std::endl;
+        throw e;
+      }
+
+      update(et, c, i, date);
+    }
+
+    if (args.count("description")) {
+      const std::string d = args["description"].as<std::string>();
+
+      update(et, c, i, d);
+
+    }
+    
+  } else if (args.count("category") && !args.count("item")) { // update category
+
+    std::regex identifiersRegex("([a-zA-Z0-9]+):([a-zA-Z0-9]+)");
+    std::cmatch identifiersMatch;
+    const std::string identifiers = args["category"].as<std::string>();
+    std::regex_match(identifiers.c_str(), identifiersMatch, identifiersRegex);
+
+    if (identifiers.empty()) {
+        std::cerr << "Error: invalid category argument." << std::endl;
+        throw std::invalid_argument("args");
+    }
+
+    update(et, std::string(identifiersMatch[1]), std::string(identifiersMatch[2]));
+
+    
+  } else { // handle bad arguments
+      std::cerr << "Error: missing category or item argument(s)." << std::endl; 
+      throw std::invalid_argument("args");  
+  }
+  // Otherwise, ignore other arguments
 }
 
