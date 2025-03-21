@@ -13,6 +13,13 @@
 #include <iomanip>
 #include <algorithm>
 
+
+const char TAG_EXCEPTION[] = "tag";
+const char DATE_JSON_ELEMENT[] = "date";
+const char TAGS_JSON_ELEMENT[] = "tags";
+const char AMOUNT_JSON_ELEMENT[] = "amount";
+const char DESCRIPTION_JSON_ELEMENT[] = "description";
+
 // ------------------------------------------------
 //                  Constructors
 // ------------------------------------------------
@@ -105,7 +112,7 @@ bool Item::addTag(const std::string &tag) noexcept {
 bool Item::deleteTag(const std::string &tag) {
     auto it = std::find(tags.begin(), tags.end(), tag);
     if (it == tags.end()) {
-        throw std::out_of_range("tag");
+        throw std::out_of_range(TAG_EXCEPTION);
     }
     
     tags.erase(it);
@@ -152,19 +159,19 @@ std::string Item::str() const noexcept {
 }
 
 void to_json(nlohmann::json& json, const Item& item) noexcept {
-    json = nlohmann::json{{"amount", item.amount},
-                          {"date", item.date},
-                          {"description", item.description},
-                          {"tags", item.tags}};
+    json = nlohmann::json{{AMOUNT_JSON_ELEMENT, item.amount},
+                          {DATE_JSON_ELEMENT, item.date},
+                          {DESCRIPTION_JSON_ELEMENT, item.description},
+                          {TAGS_JSON_ELEMENT, item.tags}};
 }
 
 void from_json(const nlohmann::json& json, Item& item) {
-    json.at("amount").get_to(item.amount);
-    json.at("date").get_to(item.date);
-    json.at("description").get_to(item.description);
+    json.at(AMOUNT_JSON_ELEMENT).get_to(item.amount);
+    json.at(DATE_JSON_ELEMENT).get_to(item.date);
+    json.at(DESCRIPTION_JSON_ELEMENT).get_to(item.description);
 
     std::vector<std::string> jsonTags;
-    json.at("tags").get_to(jsonTags);
+    json.at(TAGS_JSON_ELEMENT).get_to(jsonTags);
 
     for (auto it = jsonTags.cbegin(); it != jsonTags.cend(); it++) {
         item.addTag(*it);
