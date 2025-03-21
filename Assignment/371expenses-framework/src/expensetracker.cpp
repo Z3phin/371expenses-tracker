@@ -15,12 +15,18 @@
 #include <utility>
 
 // ------------------------------------------------
+//                  Constants
+// ------------------------------------------------
+
+const char NEW_CATEGORY_ERROR_MSG[] = "Could not add new category.";
+const char ADD_CATEGORY_ERROR_MSG[] = "Could not add category.";
+const char FILE_OPEN_ERROR_MSG[] = "File did not open successfully.";
+
+
+// ------------------------------------------------
 //                  Constructor
 // ------------------------------------------------
 
-// An ExpenseTracker constructor that takes no parameters and constructs an
-//  an ExpenseTracker object
-//
 // Example:
 //  ExpenseTracker etObj{};
 
@@ -29,19 +35,10 @@ ExpenseTracker::ExpenseTracker() : categoryMap({}) {}
 
 
 // ------------------------------------------------
-//                  Deconstructor
-// ------------------------------------------------
-
-/// @brief Desconstructs the ExpenseTracker object
-ExpenseTracker::~ExpenseTracker() {}
-
-// ------------------------------------------------
 //                  Property Functions
 // ------------------------------------------------ 
 
-// TODO Write a function, size, that takes no parameters and returns an unsigned
-//  int of the number of categories the ExpenseTracker contains.
-//
+
 // Example:
 //  ExpenseTracker etObj{};
 //  auto size = etObj.size();
@@ -57,12 +54,7 @@ unsigned int ExpenseTracker::size() const noexcept {
 //               Category Operations
 // ------------------------------------------------ 
 
-// TODO Write a function, newCategory, that takes one parameter, a category
-//  identifier, and returns the Category object as a reference. If an object
-//  with the same identifier already exists, then the existing object should be
-//  returned. Throw a std::runtime_error if the Category object cannot be
-//  inserted into the container.
-//
+
 // Example:
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
@@ -72,29 +64,23 @@ unsigned int ExpenseTracker::size() const noexcept {
 /// same identifier. 
 /// @param categoryIdent identifier of new category.
 /// @return reference to new or already existing category. 
+/// @throws std::runtime_error if adding the new Category was unsuccessful.
 Category& ExpenseTracker::newCategory(const std::string &categoryIdent) {
-    auto it = categoryMap.find(categoryIdent);
-    if (it != categoryMap.end()) {
+    const auto it = categoryMap.find(categoryIdent);
+    if (it != categoryMap.cend()) {
         return *(it->second);
     }
 
     try {
-        std::shared_ptr<Category> pNewCategory(new Category(categoryIdent));
+        const std::shared_ptr<Category> pNewCategory(new Category(categoryIdent));
         categoryMap.insert(std::make_pair(categoryIdent, pNewCategory));
         return *pNewCategory; 
     } catch (...) {
-        throw std::runtime_error("Something went wrong!");
+        throw std::runtime_error(NEW_CATEGORY_ERROR_MSG);
     }
 
 }
 
-// TODO Write a function, addCategory, that takes one parameter, a Category
-//  object, and returns true if the object was successfully inserted. If an
-//  object with the same identifier already exists, then the contents should be
-//  merged (see also Category::addItem) and then returns false. Throw a
-//  std::runtime_error if the Category object cannot be inserted into the
-//  container for whatever reason.
-//
 // Example:
 //  ExpenseTracker etObj{};
 //  Category cObj{"categoryIdent"};
@@ -114,21 +100,16 @@ bool ExpenseTracker::addCategory(const Category &category) {
     }
 
     try {
-        std::shared_ptr<Category> pNewItem(new Category(category));
+        const std::shared_ptr<Category> pNewItem(new Category(category));
         categoryMap.insert(std::make_pair(category.getIdent(), pNewItem));
         return true;
     } catch (...) {
-        throw std::runtime_error("Something went wrong");
+        throw std::runtime_error(ADD_CATEGORY_ERROR_MSG);
     }
 
      
 }      
 
-
-// TODO Write a function, getCategory, that takes one parameter, a Category
-//  identifier and returns the Category with that identifier. If no Category
-//  exists, throw an appropriate exception.
-//
 // Example:
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
@@ -142,18 +123,12 @@ bool ExpenseTracker::addCategory(const Category &category) {
 Category& ExpenseTracker::getCategory(const std::string &categoryIdentifier) const {
     const auto it = categoryMap.find(categoryIdentifier);
     if (it == categoryMap.cend()) {
-        throw std::out_of_range(categoryIdentifier + " was not found in ExpenseTracker object");
+        throw std::out_of_range(categoryIdentifier);
     }   
 
     return *(it->second);
 }
 
-
-// TODO Write a function, deleteCategory, that takes one parameter, a Category
-//  identifier, and deletes that catagory from the container, and returns true
-//  if the Category was deleted. If no Category exists, throw an appropriate
-//  exception.
-//
 // Example:
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
@@ -167,7 +142,7 @@ Category& ExpenseTracker::getCategory(const std::string &categoryIdentifier) con
 bool ExpenseTracker::deleteCategory(const std::string &categoryIdentifier) {
     const auto it = categoryMap.find(categoryIdentifier);
     if (it == categoryMap.cend()) {
-        throw std::out_of_range(categoryIdentifier + " was not found in ExpenseTracker object");
+        throw std::out_of_range(categoryIdentifier);
     }   
     
     categoryMap.erase(it);
@@ -204,92 +179,28 @@ double ExpenseTracker::getSum() const noexcept {
 //               JSON File Operations
 // ------------------------------------------------ 
 
-// TODO Write a function, load, that takes one parameter, a std::string,
-//  containing the filename for the database. Open the file, read the contents,
-//  and populates the container for this ExpenseTracker. If the file does not open throw
-//  an appropriate exception (either std::runtime_error or a derived class).
-//
-// A note on clashes:
-//  If you encounter two categories with the same identifier, or two expense items with the same
-//  identifier within the same category, you may choose whichever category/item is parsed
-//  by the nlohmann json library. The json spec on duplicate keys is undefined, so
-//  you can default to the behaviour of the nlohmann json library.
-// JSON formatting:
-//  The JSON file has the following format (see the sample database.json file
-//  also provided with the coursework framework):
-// {
-//   "Studies": {
-//     "1": {
-//       "amount": 999.99,
-//       "date": "2024-12-25",
-//       "description": "Laptop",
-//       "tags": [
-//         "computer",
-//         "programming",
-//         "uni"
-//       ]
-//     },
-//     ...
-//   },
-//   "Travel": {
-//     "3": {
-//       "amount": 164.0,
-//       "date": "2024-12-30",
-//       "description": "Bus Pass",
-//       "tags": [
-//         "bus",
-//         "uni"
-//       ]
-//     }
-//   },
-//   ...
-// }
-//
-// More help:
-//  To help you with this function, I've selected the nlohmann::json
-//  library that you must use for your coursework. Read up on how to use it
-//  here: https://github.com/nlohmann/json. You may not use any other external
-//  library other than the one I have provided. You may choose to process the
-//  JSON yourself without the help of the library but I guarantee this will be
-//  more work.
-//
-//  Understanding how to use external libraries is part of this coursework! You
-//  will need to use this file to deserialize the JSON from string
-//  to the JSON object provided by this library. Don't just look at the code
-//  provided below, or in the README on the GitHub and despair. Google search,
-//  look around, try code out in a separate file to all figure out how to use
-//  this library.
-//
-//  Once you have deserialized the JSON string into an object, you will need to
-//  loop through this object, constructing Category and Item objects according
-//  to the JSON data in the file.
-//
 // Example:
 //  ExpenseTracker etObj{};
 //  etObj.load("database.json");
 
 /// @brief Opens a JSON file with the given file name and populates the ExpenseTracker 
-/// with its categories and items. Invalid JSON objects will be ignored.
+/// with its categories and items.
 /// @param database JSON datbase filename.
 /// @throws exceptions may be thrown when parsing the JSON file (e.g. improper formatting)
 void ExpenseTracker::load(const std::string &database) {
     std::ifstream inputFileStream;
     inputFileStream.open(database, std::ifstream::in);
+
     if (!inputFileStream.good()) {
         inputFileStream.close();
-        throw std::runtime_error("File did not open successfully");
+        throw std::runtime_error(FILE_OPEN_ERROR_MSG);
     }
 
-    nlohmann::json j = nlohmann::json::parse(inputFileStream);
+    const nlohmann::json j = nlohmann::json::parse(inputFileStream);
     from_json(j, *this);
     inputFileStream.close();
 }
 
-
-// TODO Write a function, save, that takes one parameter, the path of the file
-//  to write the database to. The function should serialise the ExpenseTracker object
-//  as JSON.
-//
 // Example:
 //  ExpenseTracker etObj{};
 //  etObj.load("database.json");
@@ -301,9 +212,8 @@ void ExpenseTracker::load(const std::string &database) {
 void ExpenseTracker::save(const std::string &filepath) const {
     std::ofstream output;
     output.open(filepath);
-    if (!output.good()) {
-        output.close();
-        throw std::runtime_error(filepath + " could not be opened successfully.");
+    if (!output.is_open()) {
+        throw std::runtime_error(FILE_OPEN_ERROR_MSG);
     }
 
     output << this->str();
@@ -315,9 +225,6 @@ void ExpenseTracker::save(const std::string &filepath) const {
 //               Operator Functions
 // ------------------------------------------------ 
 
-// TODO Write an == operator overload for the ExpenseTracker class, such that two
-//  ExpenseTracker objects are equal only if they have the exact same data.
-//
 // Example:
 //  ExpenseTracker etObj1{};
 //  ExpenseTracker etObj2{};
@@ -333,15 +240,15 @@ void ExpenseTracker::save(const std::string &filepath) const {
 bool operator==(const ExpenseTracker &lhs, const ExpenseTracker &rhs) noexcept {
     if (lhs.size() != rhs.size()) return false;
 
+    // Check if each category in lhs is in rhs
     for (auto it = lhs.categoryMap.cbegin(); it != lhs.categoryMap.cend(); it++) {
-        std::string categoryIdent = it->second->getIdent();
-        auto result = rhs.categoryMap.find(categoryIdent);
+        
+        const Category &lCategory = *(it->second);
+        const auto result = rhs.categoryMap.find(lCategory.getIdent());
 
         if (result == rhs.categoryMap.end()) return false; 
 
-        Category &lCategory = *(it->second);
-        Category &rCategory = *(result->second);
-        
+        const Category &rCategory = *(result->second);        
         if (lCategory != rCategory) return false;
     }
     return true; 
@@ -360,12 +267,7 @@ bool operator!=(const ExpenseTracker &lhs, const ExpenseTracker &rhs) noexcept {
 //               JSON Representation
 // ------------------------------------------------ 
 
-// TODO Write a function, str, that takes no parameters and returns a
-//  std::string of the JSON representation of the data in the ExpenseTracker.
-//
-// Hint:
-//  See the coursework specification for how this JSON should look.
-//
+
 // Example:
 //  ExpenseTracker etObj{};
 //  std::string s = etObj.str();
@@ -374,23 +276,34 @@ bool operator!=(const ExpenseTracker &lhs, const ExpenseTracker &rhs) noexcept {
 /// @return JSON formatted string representation of the object. 
 std::string ExpenseTracker::str() const noexcept {
     nlohmann::json json;
+
     to_json(json, *this);
     return json.dump();
 }
 
+/// @brief Converts the given ExpenseTracker object to JSON representation in the given JSON object.
+/// @param json json object to hold ExpenseTracker JSON data.
+/// @param et ExpenseTracker to be converted to JSON.
 void to_json(nlohmann::json& json, const ExpenseTracker& et) noexcept {
+
     for (auto it = et.categoryMap.cbegin(); it != et.categoryMap.cend(); it++) {
         nlohmann::json categoryJson = nlohmann::json::object();
+
         to_json(categoryJson, *(it->second));
         json[it->second->getIdent()] = categoryJson; 
     }
 }
 
+/// @brief Takes the given JSON represented ExpenseTracker and populates the given 
+/// ExpenseTracker object with the data. 
+/// @param json ExpenseTracker JSON representation.
+/// @param et ExpenseTracker to populate. 
 void from_json(const nlohmann::json& json, ExpenseTracker& et) {
     for (auto it = json.cbegin(); it != json.cend(); it++) {
 
-        nlohmann::json categoryJson = it.value();
+        const nlohmann::json& categoryJson = it.value();
         Category c = Category(it.key());
+
         from_json(categoryJson, c);
         et.addCategory(c);
     }

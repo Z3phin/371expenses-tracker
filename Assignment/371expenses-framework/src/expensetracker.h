@@ -32,13 +32,6 @@ class ExpenseTracker {
         ExpenseTracker();
 
         // ------------------------------------------------
-        //                  Deconstructor
-        // ------------------------------------------------
-
-        /// @brief Desconstructs the ExpenseTracker object
-        ~ExpenseTracker();
-
-        // ------------------------------------------------
         //                  Property Functions
         // ------------------------------------------------        
 
@@ -55,6 +48,7 @@ class ExpenseTracker {
         /// same identifier. 
         /// @param categoryIdent identifier of new category.
         /// @return reference to new or already existing category.
+        /// @throws std::runtime_error if adding the new Category was unsuccessful.
         Category& newCategory(const std::string &categoryIdent);
 
         /// @brief Adds the given Category object to the ExpenseTracker. If the ExpenseTracker 
@@ -89,7 +83,7 @@ class ExpenseTracker {
         // ------------------------------------------------ 
 
         /// @brief Opens a JSON file with the given file name and populates the ExpenseTracker 
-        /// with its categories and items. Invalid JSON objects will be ignored.
+        /// with its categories and items.
         /// @param database JSON datbase filename.
         /// @throws exceptions may be thrown when parsing the JSON file (e.g. improper formatting)
         void load(const std::string &database);
@@ -124,13 +118,16 @@ class ExpenseTracker {
         /// @return JSON formatted string representation of the object. 
         std::string str() const noexcept;
 
+        /// @brief Converts the given ExpenseTracker object to JSON representation in the given JSON object.
+        /// @param json json object to hold ExpenseTracker JSON data.
+        /// @param et ExpenseTracker to be converted to JSON.
         friend void to_json(nlohmann::json& json, const ExpenseTracker& et) noexcept;
-        friend void from_json(const nlohmann::json& json, ExpenseTracker& et);
 
-        // ------------------------------------------------
-        //               Helper Functions
-        // ------------------------------------------------
-        
+        /// @brief Takes the given JSON represented ExpenseTracker and populates the given 
+        /// ExpenseTracker object with the data. 
+        /// @param json ExpenseTracker JSON representation.
+        /// @param et ExpenseTracker to populate.
+        friend void from_json(const nlohmann::json& json, ExpenseTracker& et);
         
 };
 
