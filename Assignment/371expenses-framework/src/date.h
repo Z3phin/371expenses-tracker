@@ -24,6 +24,20 @@ class Date {
         unsigned int month; 
         unsigned int day; 
 
+        // -----------------------------------------------------
+        //                  Helper Functions
+        // -----------------------------------------------------
+
+        static bool isLeapYear(const unsigned int year) noexcept;
+
+        static bool isValidMonth(const unsigned int month) noexcept;
+
+        static bool isValidDay(const unsigned int day) noexcept;
+
+        static bool isValidDate(const unsigned int year,   
+                                const unsigned int month, 
+                                const unsigned int day) noexcept;
+
     public:
 
         // ------------------------------------------------

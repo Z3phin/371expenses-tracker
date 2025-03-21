@@ -13,57 +13,17 @@
 #include <regex>
 #include <sstream>
 
-// Possibly replace the checking for digits and format with regular expressions
-
-// -----------------------------------------------------
-//                  Helper Functions
-// -----------------------------------------------------
-
-// Checks whether or not the given year is a leap year.
-static bool isLeapYear(unsigned int year) noexcept {
-    return ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0));
-}
-
-// Checks whether the given value is a valid month value. 
-static bool isValidMonth(unsigned int month) noexcept {
-    return (month >= 1 && month <= 12 );
-}
-
-// Checks whether the given value is a valid day value (regardless of month) 
-static bool isValidDay(unsigned int day) noexcept {
-    return (day >= 1 && day <= 31);
-}
-
-// Checks whether the given year, month and day are a valid combination 
-// (including number of days per month and leap years)
-static bool isValidDate(unsigned int year, 
-                 unsigned int month, 
-                 unsigned int day) noexcept {
-    
-    if (!isValidMonth(month) || !isValidDay(day)) return false; 
-
-    if ((month == 9 || month == 4 || month == 6 || month == 11)
-        && day > 30 ) return false; 
-
-    if (month == 2) {
-        if (isLeapYear(year)) {
-            return (day < 30);
-        } 
-        return (day < 29);
-    }
-
-    return true; 
-}
 
 // -----------------------------------------------------
 //                  Date Class Functions
 // -----------------------------------------------------
 
-
-
 // ------------------------------------------------
 //                  Constructors
 // ------------------------------------------------
+
+const char DATE_REGEX[] = "([0-9]+)-([0-9]+)-([0-9]+)";
+const char DATE_DELIMITER = '-';
 
 /// @brief Constructs a Date object with today's date.
 Date::Date() noexcept : year(0), month(0), day(0) {
@@ -104,7 +64,7 @@ Date::Date(const std::string &dateString)
 /// @return std::string represention of this date in the format 'YYYY-MM-DD'.
 std::string Date::str() const noexcept {
     std::stringstream ss; 
-    ss << this->year << "-" << this->month << "-" << this->day; 
+    ss << this->year << DATE_DELIMITER << this->month << DATE_DELIMITER << this->day; 
     return ss.str();
 }
 
@@ -120,15 +80,15 @@ std::string Date::str() const noexcept {
 /// @param _day day of the month (1-28/29/30/31 depending on month and year) to be represented
 void Date::setDate(const unsigned int _year, const unsigned int _month, const unsigned int _day) {
     if (!isValidDate(_year, _month, _day)) { 
-        throw std::invalid_argument("ERROR: Invalid date given " 
-                                    + std::to_string(_year) + "-" 
-                                    + std::to_string(_month) + "-" 
+        throw std::invalid_argument(std::to_string(_year) + DATE_DELIMITER 
+                                    + std::to_string(_month) + DATE_DELIMITER 
                                     + std::to_string(_day));
-    } else {
-        this->year = _year;
-        this->month = _month;
-        this->day = _day;
-    }
+    } 
+
+    this->year = _year;
+    this->month = _month;
+    this->day = _day;
+
 }
 
 /// @brief Sets the date object to the given date as a string with the representation of YYYY-MM-DD.
@@ -136,12 +96,12 @@ void Date::setDate(const unsigned int _year, const unsigned int _month, const un
 /// @param dateString date represented as a string to be converted (YYYY-MM-DD).
 /// @throws std::invalid_argument thrown when the provided dateStr is not valid or in the wrong format.
 void Date::setDate(const std::string &dateStr) {
-    std::regex dateRegex("([0-9]+)-([0-9]+)-([0-9]+)");
+    std::regex dateRegex(DATE_REGEX);
     std::cmatch dateMatch;
     std::regex_match(dateStr.c_str(), dateMatch, dateRegex);
 
     if (dateMatch.empty()) {
-        throw std::invalid_argument("ERROR: \'" + dateStr + "\' is not of format YYYY-MM-DD.");
+        throw std::invalid_argument(dateStr);
     }
 
     this->setDate(std::stoi(dateMatch[1]),  // year
@@ -262,5 +222,45 @@ bool operator<=(const Date& lhs, const Date& rhs) noexcept {
 /// @return True if lhs date is chronologiclly on or after rhs date. False otherwise 
 bool operator>=(const Date& lhs, const Date& rhs) noexcept {
     return (lhs > rhs || lhs == rhs);
+}
+
+// -----------------------------------------------------
+//                  Helper Functions
+// -----------------------------------------------------
+
+// Checks whether or not the given year is a leap year.
+bool Date::isLeapYear(const unsigned int year) noexcept {
+    return ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0));
+}
+
+// Checks whether the given value is a valid month value. 
+bool Date::isValidMonth(const unsigned int month) noexcept {
+    return (month >= 1 && month <= 12);
+}
+
+// Checks whether the given value is a valid day value (regardless of month) 
+bool Date::isValidDay(const unsigned int day) noexcept {
+    return (day >= 1 && day <= 31);
+}
+
+// Checks whether the given year, month and day are a valid combination 
+// (including number of days per month and leap years)
+bool Date::isValidDate(const unsigned int year, 
+                 const unsigned int month, 
+                 const unsigned int day) noexcept {
+    
+    if (!isValidMonth(month) || !isValidDay(day)) return false; 
+
+    if ((month == 9 || month == 4 || month == 6 || month == 11)
+        && day > 30 ) return false; 
+
+    if (month == 2) {
+        if (isLeapYear(year)) {
+            return (day < 30);
+        } 
+        return (day < 29);
+    }
+
+    return true; 
 }
 
