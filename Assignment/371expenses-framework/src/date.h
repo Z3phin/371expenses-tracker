@@ -93,9 +93,16 @@ class Date {
         //               JSON Representation 
         // ------------------------------------------------
 
+        /// @brief Converts the Date object into a JSON string in the format "YYYY-MM-DD"
+        /// @param json json string to hold Date respresentation. 
+        /// @param date Date to be converted to JSON.
         friend void to_json(nlohmann::json& json, const Date& date) noexcept;
 
-        friend void from_json(const nlohmann::json& json, Date& date) noexcept;
+        /// @brief Sets a Date object to the date stored in a JSON string of the form "YYYY-MM-DD".
+        /// @param json json string representation "YYYY-MM-DD".
+        /// @param date Date object to be set.
+        /// @throws std::invalid_argument thrown when the provided string is in the wrong format. 
+        friend void from_json(const nlohmann::json& json, Date& date);
 
         // ------------------------------------------------
         //                    Operators 
