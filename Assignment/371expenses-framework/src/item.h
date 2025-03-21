@@ -16,7 +16,7 @@
 
 #include "date.h"
 #include "lib_json.hpp"
-#include <vector> // would have used a set - but the tests require the order they were inserted in
+#include <vector> 
 #include <string>
 
 class Item {
@@ -25,7 +25,7 @@ class Item {
         std::string description; 
         double amount; 
         Date date;
-        std::vector<std::string> tags; 
+        std::vector<std::string> tags; // would have preferred a set, but order must be preserved
 
     public:
     
@@ -38,7 +38,10 @@ class Item {
         /// @param _description description of this item.
         /// @param _amount amount belonging to this expense item (e.g £42.11)
         /// @param _date date of this item. 
-        Item(const std::string &_identifier, const std::string &_description, const double &_amount, const Date &_date) noexcept;
+        Item(const std::string &_identifier, 
+             const std::string &_description, 
+             const double &_amount, 
+             const Date &_date) noexcept;
 
         // ------------------------------------------------
         //                      Getters
@@ -116,7 +119,15 @@ class Item {
         /// @return std::string of the JSON representation of the data in this Item.
         std::string str() const noexcept; 
 
+        /// @brief Converts the given item into a JSON representation using the given JSON object.
+        /// @param json json object to load item data into. 
+        /// @param item item to be converted to JSON.
         friend void to_json(nlohmann::json& json, const Item& item) noexcept; 
+
+        /// @brief Sets the given item to contain the data in the given JSON object
+        /// @param json JSON object representing an Item.
+        /// @param item Item to be set with the JSON data.
+        /// @throws exception if JSON is invalid for an Item.
         friend void from_json(const nlohmann::json& json, Item& item); 
 
         // ------------------------------------------------

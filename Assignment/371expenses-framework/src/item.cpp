@@ -33,6 +33,7 @@ Item::Item(const std::string &_identifier,
            const std::string &_description, 
            const double &_amount, 
            const Date &_date) noexcept
+
             : identifier(_identifier), 
             description(_description), 
             amount(_amount), 
@@ -135,13 +136,10 @@ bool Item::containsTag(const std::string &tag) const noexcept {
 /// @brief Merges the tags of another Item object with this object.
 /// @param other Item with tags to be merged into this object.
 void Item::mergeTags(const Item& other) noexcept {
-    for (auto it = other.tags.cbegin(); 
-              it != other.tags.cend();
-              it ++ ) {
+    for (auto it = other.tags.cbegin(); it != other.tags.cend(); it ++ ) {
         this->addTag(*it);
     }    
 }
-
 
 // ------------------------------------------------
 //               JSON Representation 
@@ -158,6 +156,9 @@ std::string Item::str() const noexcept {
     return json.dump();
 }
 
+/// @brief Converts the given item into a JSON representation using the given JSON object.
+/// @param json json object to load item data into. 
+/// @param item item to be converted to JSON.
 void to_json(nlohmann::json& json, const Item& item) noexcept {
     json = nlohmann::json{{AMOUNT_JSON_ELEMENT, item.amount},
                           {DATE_JSON_ELEMENT, item.date},
@@ -165,17 +166,23 @@ void to_json(nlohmann::json& json, const Item& item) noexcept {
                           {TAGS_JSON_ELEMENT, item.tags}};
 }
 
+/// @brief Sets the given item to contain the data in the given JSON object
+/// @param json JSON object representing an Item.
+/// @param item Item to be set with the JSON data.
+/// @throws exception if JSON is invalid for an Item. 
 void from_json(const nlohmann::json& json, Item& item) {
     json.at(AMOUNT_JSON_ELEMENT).get_to(item.amount);
     json.at(DATE_JSON_ELEMENT).get_to(item.date);
     json.at(DESCRIPTION_JSON_ELEMENT).get_to(item.description);
 
+    // Get the tags and add them to the item.
     std::vector<std::string> jsonTags;
     json.at(TAGS_JSON_ELEMENT).get_to(jsonTags);
 
     for (auto it = jsonTags.cbegin(); it != jsonTags.cend(); it++) {
         item.addTag(*it);
     }
+    
 }
 
 // ------------------------------------------------
