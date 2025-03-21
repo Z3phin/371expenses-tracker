@@ -32,15 +32,8 @@ class Category {
         // ------------------------------------------------
 
         /// @brief Constructor for category. 
-        /// @param _ident Category identifier.
-        Category(const std::string& _ident) noexcept; 
-
-        // ------------------------------------------------
-        //                  Deconstructor
-        // ------------------------------------------------
-
-        /// @brief Deconstructor for category object. 
-        ~Category(); 
+        /// @param identifier Category identifier.
+        Category(const std::string& identifier) noexcept; 
 
         // ------------------------------------------------
         //          Category Property Functions
@@ -60,7 +53,7 @@ class Category {
 
         /// @brief Updates the category identifier to a new identifier. 
         /// @param _ident New identifier for category. 
-        void setIdent(const std::string& _ident) noexcept;
+        void setIdent(const std::string& identifier) noexcept;
 
         // ------------------------------------------------
         //                  Item Operations
@@ -68,15 +61,15 @@ class Category {
 
         /// @brief Creates a new Item object with the given properties and adds it to the category.
         /// If an item with the given identifier already exists, it will will be overwritten by the new object. 
-        /// @param _identifier identifier of the new Item object. 
-        /// @param _description description of the new Item object. 
-        /// @param _amount amount of the new Item object. 
-        /// @param _date date of the new Item object. 
+        /// @param identifier identifier of the new Item object. 
+        /// @param description description of the new Item object. 
+        /// @param amount amount of the new Item object. 
+        /// @param date date of the new Item object. 
         /// @return Reference to the new Item object.
-        Item& newItem(const std::string &_identifier, 
-                      const std::string &_description, 
-                      const double &_amount,
-                      const Date &_date);
+        Item& newItem(const std::string &identifier, 
+                      const std::string &description, 
+                      const double &amount,
+                      const Date &date);
 
         /// @brief Adds the given Item object to the Category or merges with an existing
         /// Item in the Category if it shares the same identifier.  
@@ -85,7 +78,7 @@ class Category {
         /// amount and date of the new Item will be overwrite the exising item. 
         /// @param item item to be added
         /// @return True if the item was added, false if it was merged with an existing object. 
-        bool addItem(const Item &_item) noexcept;
+        bool addItem(const Item &item) noexcept;
 
         /// @brief Attempts to find an Item in the Category with the given identifier 
         /// @param identifier identifier of Item to be retrieved
@@ -99,13 +92,17 @@ class Category {
         double getSum() const noexcept;  
 
         /// @brief Deletes the Item with the matching identifier from the Category. 
-        /// @param _identifier Identifier of item to be deleted. 
+        /// @param identifier Identifier of item to be deleted. 
         /// @return True only if the item was deleted.
         /// @throws std::out_of_range exception if the Item with the given identifier
         /// could not be found in the category.
-        bool deleteItem(const std::string &_identifier);
+        bool deleteItem(const std::string &identifier);
 
-        void mergeItems(const Category &other);
+        /// @brief Adds all the items in the given Category object to this Category. 
+        /// If this category already contains an item, it is merged/overwritten by the
+        /// item. (see addItem)
+        /// @param other Category with items to be added to this Category. 
+        void mergeItems(const Category &other) noexcept;
     
         // ------------------------------------------------
         //              Operator Functions
@@ -136,7 +133,14 @@ class Category {
         /// @return JSON representation of this Category
         std::string str() const noexcept;
 
+        /// @brief Converts the given Category to a JSON object using the json object to store the data.
+        /// @param json json object to hold Category data.
+        /// @param category Category object to be coverted to JSON.
         friend void to_json(nlohmann::json& json, const Category& category) noexcept;
+
+        /// @brief Takes a JSON represented Category and populates the given category with its items.
+        /// @param json JSON represented Categeory.
+        /// @param category Category to populate with JSON data. 
         friend void from_json(const nlohmann::json &json, Category& category);
 };
 
