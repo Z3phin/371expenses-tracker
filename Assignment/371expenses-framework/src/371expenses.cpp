@@ -108,7 +108,8 @@ int App::run(int argc, char *argv[]) {
 //  auto options = App::cxxoptsSetup();
 //  auto args = options.parse(argc, argv);
 
-/// @brief Create a cxxopts instance.
+/// @brief Create a cxxopts instance with the appropriate 
+/// arguments for this app.
 /// @return cxxopts instance.
 cxxopts::Options App::cxxoptsSetup() {
   cxxopts::Options cxxopts("371expenses", "Student ID: " + STUDENT_NUMBER + "\n");
@@ -626,8 +627,7 @@ void App::performUpdateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
 /// If this pattern is malformed or oldIdentifier is not a valid 
 /// category, an error is output.
 /// In the case that the newIdentifier is the same as an existing 
-/// category, the existing category will be overwritten/merged 
-/// with the updated category. (see addCategory()).
+/// category, see addCategory() for this behaviour.
 /// @param et ExpenseTracker object
 /// @param args Arguments that contains --category
 void App::performUpdateCategory(ExpenseTracker &et, cxxopts::ParseResult &args) {

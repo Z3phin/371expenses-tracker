@@ -26,10 +26,29 @@ const std::string STUDENT_NUMBER = "2212805";
 // program argument.
 enum Action { CREATE, SUM, JSON, DELETE, UPDATE };
 
+/// @brief Runs the 371Expenses program program. This program allows users to 
+/// create a tracker of various categories that each contain various items.
+/// Using various arguments, json, create, sum, delete, update, users are 
+/// able to manipulate and inspect their expense trackers. 
+/// 
+/// The user's expenses can be read from and saved to a json file. 
+///
+/// @param argc arguments for program i.e. json, create, sum, delete, update, item, 
+/// category, date, tags and description. 
+/// @param argv number of arguements.
+/// @return status code.
 int run(int argc, char *argv[]);
 
+/// @brief Create a cxxopts instance with the appropriate 
+/// arguments for this app.
+/// @return cxxopts instance.
 cxxopts::Options cxxoptsSetup();
 
+/// @brief Case-insensitively checks the action argument retrieved from cxxopts
+/// and converts this to a value from the Action enum.
+/// @param args arguments from cxxopts.
+/// @return Action value based on action argument. 
+/// @throws std::invalid_argument exception if an invalid value is given. 
 App::Action parseActionArgument(cxxopts::ParseResult &args);
 
 // ------------------------------------------------
