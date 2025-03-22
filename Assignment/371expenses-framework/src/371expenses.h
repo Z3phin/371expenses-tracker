@@ -209,19 +209,41 @@ void update(ExpenseTracker& et, const std::string& oldCategoryIdent, const std::
 // update item 
 void update(Item& item, cxxopts::ParseResult &args);
 
-
 void performUpdateAction(ExpenseTracker &et, cxxopts::ParseResult &args);
+
 void performUpdateCategory(ExpenseTracker &et, cxxopts::ParseResult &args);
+
 void performUpdateItem(ExpenseTracker &et, cxxopts::ParseResult &args);
 
 // ------------------------------------------------
 //                HELPER FUNCTIONS
 // ------------------------------------------------
 
+/// @brief Tries to get hte given category from the ExpenseTracker.
+/// If not successful, outputs an error message and an exception is thrown.
+/// @param et ExpenseTracker object.
+/// @param category Category identifer. 
+/// @return Refernence to the Category only if successful. 
 Category& tryGetCategory(ExpenseTracker& et, const std::string& category);
+
+/// @brief Tries to get the given item from the ExpenseTracker Category.
+/// If not successful, outputs an error message and an exception is thrown. 
+/// @param et ExpenseTracker object.
+/// @param category Category identifier. 
+/// @param item Item identifier.
+/// @return Reference to the Item only if successful. 
 Item& tryGetItem(ExpenseTracker& et, const std::string& category, const std::string& item);
 
+/// @brief Tries to parse the given string to an amount.
+/// If not successful, outputs an error message and throws the exception.
+/// @param amountStr String to be parsed.
+/// @return amount only if successful. 
 double tryParseAmount(const std::string& amountStr);
+
+/// @brief Tries to parse the given string to a Date.
+/// If not successful, outputs an error message and throws the exception.
+/// @param dateStr String to be parsed.
+/// @return Date only if parse was successful. 
 Date tryParseDate(const std::string& dateStr);
 
 
