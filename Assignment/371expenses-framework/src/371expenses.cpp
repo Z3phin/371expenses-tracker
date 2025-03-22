@@ -273,23 +273,28 @@ std::string App::getJSON(ExpenseTracker &etObj,
 /// or Category respectively. 
 void App::performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
 
-    // No Category or Item -> ExpenseTracker
-    if (!args.count(CATEGORY_ARGUMENT) && !args.count(ITEM_ARGUMENT)) {
+    
+    if (!args.count(CATEGORY_ARGUMENT) 
+        && !args.count(ITEM_ARGUMENT)) { // No Category or Item -> ExpenseTracker
 
       std::cout << getJSON(et) << std::endl;
 
-    } else if (args.count(CATEGORY_ARGUMENT) && !args.count(ITEM_ARGUMENT)) { // Just Category argument -> Category
+    } else if (args.count(CATEGORY_ARGUMENT) 
+                && !args.count(ITEM_ARGUMENT)) { // Just Category argument -> Category
+
       const std::string category = args[CATEGORY_ARGUMENT].as<std::string>();
 
       std::cout << getJSON(et, category) << std::endl;
 
-    } else if (args.count(CATEGORY_ARGUMENT) && args.count(ITEM_ARGUMENT)) { // Category and Item argument -> Item
+    } else if (args.count(CATEGORY_ARGUMENT)
+               && args.count(ITEM_ARGUMENT)) { // Category and Item argument -> Item
+
       const std::string item = args[ITEM_ARGUMENT].as<std::string>();
       const std::string category = args[CATEGORY_ARGUMENT].as<std::string>();
 
       std::cout << getJSON(et, category, item) << std::endl;   
       
-    } else {  // Only Item, missing Category -> Error
+    } else {                                // Only Item, missing Category -> Error
 
         std::cerr << ERROR_MISSING_CATEGORY << std::endl;
         throw std::invalid_argument(ITEM_ARGUMENT);

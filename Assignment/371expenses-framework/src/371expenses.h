@@ -47,9 +47,51 @@ cxxopts::Options cxxoptsSetup();
 
 App::Action parseActionArgument(cxxopts::ParseResult &args);
 
+// ------------------------------------------------
+//                      JSON 
+// ------------------------------------------------
+
+
+/// @brief Returns a std::string containing the JSON representation of a
+/// ExpenseTracker object. 
+/// @param etObj 
+/// @return JSON representation of ExpenseTracker as a string. 
 std::string getJSON(ExpenseTracker &et);
+
+/// @brief Returns a std::string containing the JSON representation of a 
+/// specific Category in an ExpenseTracker object. 
+/// @param etObj ExpenseTracker object.
+/// @param c Category identifier
+/// @return JSON represenation of Category in ExpenseTracker as a string. 
+/// @throws std::out_of_range if Category is not in ExpenseTracker object.
 std::string getJSON(ExpenseTracker &et, const std::string &c);
+
+/// @brief Returns a std::string containing the JSON representation of a 
+/// specific Item in a ExpenseTracker object.
+/// @param etObj ExpenseTracker object.
+/// @param c Category identifier
+/// @param id Item identifier.
+/// @return JSON representation of Item as a string.
+/// @throws std::out_of_range if Category or Item is not in ExpenseTracker.
 std::string getJSON(ExpenseTracker &et, const std::string &c, const std::string &id);
+
+/// @brief Performs the JSON action. According to the arguments:
+///
+/// If both category and item arguments are present, then the Item
+/// JSON is printed. 
+///
+/// If only category is given, then the Category JSON is printed.
+///
+/// If neither category or item is given, the entire ExpenseTracker
+/// JSON is given 
+///
+/// @param et ExpenseTracker 
+/// @param args Command line arguments that may include "category" or "item"
+/// @throws std::invalid_argument if an invalid category, item or combination
+/// of the two is given (i.e. item without a category).
+/// std::out_of_range if the category or item are not in the ExpenseTracker
+/// or Category respectively.
+void performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 
 // ------------------------------------------------
 //                      SUM
@@ -135,10 +177,6 @@ void update(ExpenseTracker& et, const std::string& oldCategoryIdent, const std::
 
 // update item 
 void update(Item& item, cxxopts::ParseResult &args);
-
-void performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args);
-
-
 
 void performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 
