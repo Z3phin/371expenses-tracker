@@ -55,10 +55,10 @@ std::string getJSON(ExpenseTracker &et, const std::string &c, const std::string 
 double getSum(ExpenseTracker &et);
 double getSum(ExpenseTracker &et, const std::string &c);
 
-Category& createCategory(ExpenseTracker &et, 
+Category& create(ExpenseTracker &et, 
                     const std::string &c);      
 
-Item& createItem(ExpenseTracker &et, 
+Item& create(ExpenseTracker &et, 
                 const std::string &c,
                 const std::string &id,
                 const std::string &desc,
