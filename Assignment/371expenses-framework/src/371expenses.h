@@ -51,8 +51,31 @@ std::string getJSON(ExpenseTracker &et);
 std::string getJSON(ExpenseTracker &et, const std::string &c);
 std::string getJSON(ExpenseTracker &et, const std::string &c, const std::string &id);
 
+// ------------------------------------------------
+//                      SUM
+// ------------------------------------------------
+
+/// @brief Returns the sum of all the Items in the ExpenseTracker object.
+/// @param et ExpenseTracker object.
+/// @return Sum of all items. 
 double getSum(ExpenseTracker &et) noexcept;
+
+/// @brief Returns the sum of all the Items in the Category contained
+/// in the ExpenseTracker object. 
+/// @param et ExpenseTracker object.
+/// @param c Category identifier. 
+/// @return Sum of all Items in the Category
+/// @throws std::out_of_range if Category is not in ExpenseTracker object.
 double getSum(ExpenseTracker &et, const std::string &c);
+
+/// @brief Performs the Sum action. Accordingly to the arguments,
+/// either the sum of all items in the whole ExpenseTracker is printed,
+/// or if a category is given, the sum of the items only in that
+/// category.  
+/// @param et ExpenseTracker object.
+/// @param args Command line arguments that may include "category"
+/// @throws std::out_of_range if the Category is not in the ExpenseTracker.
+void performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 
 // ------------------------------------------------
 //                     CREATE
@@ -115,7 +138,7 @@ void update(Item& item, cxxopts::ParseResult &args);
 
 void performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 
-void performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args);
+
 
 void performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 
