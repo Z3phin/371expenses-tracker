@@ -37,6 +37,8 @@ const char ERROR_MISSING_DELETE_ARGUMENTS[] = "Error: missing category, item, or
 const char ERROR_MISSING_UPDATE_ITEM_ARGUMENTS[] = "Error: missing description, amount, or date argument(s).";
 const char ERROR_MISSING_UPDATE_ARGUMENTS[] = "Error: missing category or item argument(s)."; 
 const char UPDATE_CATEGORY_IDENT_REGEX[] = "([a-zA-Z0-9]+):([a-zA-Z0-9]+)";
+
+const char TAGS_LIST_DELIMITER = ',';
  
 // Example:
 //  int main(int argc, char *argv[]) { return App::run(argc, argv); }
@@ -348,91 +350,98 @@ Category& App::create(ExpenseTracker &et,
     return et.newCategory(c);
 }
 
-/// @brief Creates a new Item in the given Category (if the Category does
-/// not exist, it will be created) in the ExpenseTracker object
-/// with the given properties (overwrites any existing Item with the same 
-/// identifier and merges their tags).
+/// @brief Creates a new Item in the given Category only if it does not exist
+/// already.
 /// @param et ExpenseTracker object. 
 /// @param c Identifier of Category to add Item into.
 /// @param id Identifier of Item to create.
 /// @param desc Description of Item.
 /// @param amount Amount (£) of Item.
-/// @return Reference to created Item.
+/// @return Reference to the created or already existing Item.
 Item& App::create(ExpenseTracker &et, 
                 const std::string &c,
                 const std::string &id,
                 const std::string &desc,
                 const double &amount) {
 
-    return et.newCategory(c).newItem(id, desc, amount, Date());
+    Category& category = tryGetCategory(et, c);
+    if (!category.containsItem(id)) {
+        return category.newItem(id, desc, amount, Date());
+    } else {
+        return category.getItem(id);   
+    }
+
 
 }
 
-
-
-void App::addTags(const std::string& tagList, Item& item) {
+/// @brief Adds a list of comma separated tags to the item.
+/// @param item Item to add tags to.
+/// @param tagList List of tags to add.
+void App::addTags(Item& item, const std::string& tagList) {
   std::istringstream iss(tagList);
   std::string tag;
-  while (std::getline(iss, tag, ',')) {
+
+  while (std::getline(iss, tag, TAGS_LIST_DELIMITER)) {
     item.addTag(tag);
   }  
 }
 
+/// @brief Performs corresponding actions for "create" according to the arguments, i.e. 
+/// either creating a category or an item, using the given ExpenseTracker. If 
+/// required properties are missing, for example --description for item, an error occurs. 
+/// @param et ExpenseTracker object
+/// @param args arguments including --category, --item and item's properties
 void App::performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
-  // Just category -> new Category
-  if (args.count(CATEGORY_ARGUMENT) 
-      && !args.count(ITEM_ARGUMENT) && !args.count(DESCRIPTION_ARGUMENT)
-      && !args.count(AMOUNT_ARGUMENT) && !args.count(DATE_ARGUMENT) 
+  
+  if (args.count(CATEGORY_ARGUMENT) // Just category -> new Category
+      && !args.count(ITEM_ARGUMENT) 
+      && !args.count(DESCRIPTION_ARGUMENT)
+      && !args.count(AMOUNT_ARGUMENT) 
+      && !args.count(DATE_ARGUMENT) 
       && !args.count(TAG_ARGUMENT)) {
 
       const std::string category = args[CATEGORY_ARGUMENT].as<std::string>();
 
       create(et, category);
-      return;
+  } else if (args.count(CATEGORY_ARGUMENT) // Require a category and item properties -> new Item
+             && args.count(ITEM_ARGUMENT) 
+             && args.count(DESCRIPTION_ARGUMENT) 
+             && args.count(AMOUNT_ARGUMENT)) {
+
+      performCreateItem(et, args);
+
+  } else {
+      std::cerr << ERROR_MISSING_CREATE_ARGUMENTS << std::endl; 
+      throw std::invalid_argument("args");
   }
+}
 
-  // Category, item, description, amount (optional date or tags) -> new Item 
-  // if date is wrong, do nothing.
-  if (args.count(CATEGORY_ARGUMENT) && args.count(ITEM_ARGUMENT) 
-      && args.count(DESCRIPTION_ARGUMENT) && args.count(AMOUNT_ARGUMENT)) {
+/// @brief Performs the actions for creating an item specifically. An item requires
+/// an identifier, a description, an amount (£), and the category it belongs to 
+/// minimally. Optionally, a date and tags can be specified. If date is not 
+/// specified, today's date is attached to the created item.
+/// @param et ExpenseTracker to add the item to.
+/// @param args arguments including category, item, description, amount, date and tags.
+void App::performCreateItem(ExpenseTracker &et, cxxopts::ParseResult &args) {
+    const std::string c = args[CATEGORY_ARGUMENT].as<std::string>();
+    const std::string id = args[ITEM_ARGUMENT].as<std::string>();
+    const std::string desc = args[DESCRIPTION_ARGUMENT].as<std::string>();
+    const std::string amountStr = args[AMOUNT_ARGUMENT].as<std::string>();
+    double amount = tryParseAmount(amountStr);
+    Date date;
 
-      const std::string c = args[CATEGORY_ARGUMENT].as<std::string>();
-      const std::string id = args[ITEM_ARGUMENT].as<std::string>();
-      const std::string desc = args[DESCRIPTION_ARGUMENT].as<std::string>();
-      const std::string amountStr = args[AMOUNT_ARGUMENT].as<std::string>();
-      double amount;
-      Date date;
+    if (args.count(DATE_ARGUMENT)) {
+      const std::string dateStr = args[DATE_ARGUMENT].as<std::string>();
+      date = tryParseDate(dateStr);
+    } 
 
-      try {
-        amount = std::stod(amountStr);
-      } catch (const std::exception &ex) {
-        std::cerr << ERROR_INVALID_AMOUNT << std::endl;
-        throw ex;
-      }
+    Item& item = create(et, c, id, desc, amount);
+    item.setDate(date); // Possibly does nothing.
 
-      if (args.count(DATE_ARGUMENT)) {
-        const std::string dateStr = args[DATE_ARGUMENT].as<std::string>();
-        try {
-          date = Date(dateStr);
-        } catch (const std::invalid_argument& ex) {
-          std::cerr << ERROR_INVALID_DATE << std::endl;
-          throw ex;
-        }
-      } 
-
-      Item& i = create(et, c, id, desc, amount);
-      i.setDate(date);
-
-      if (args.count(TAG_ARGUMENT)) {
-        const std::string tags = args[TAG_ARGUMENT].as<std::string>();
-        addTags(tags, i);
-      }
-      return;
-
-  }
-
-  std::cerr << ERROR_MISSING_CREATE_ARGUMENTS << std::endl; 
-  throw std::invalid_argument("args");
+    if (args.count(TAG_ARGUMENT)) {
+      const std::string tags = args[TAG_ARGUMENT].as<std::string>();
+      addTags(item, tags);
+    }
 }
 
 // ------------------------------------------------
