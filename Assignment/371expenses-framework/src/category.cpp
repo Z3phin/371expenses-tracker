@@ -288,7 +288,7 @@ bool operator!=(const Category &lhs, const Category &rhs) noexcept {
 ///
 /// @return JSON representation of this Category
 std::string Category::str() const noexcept {
-    nlohmann::json categoryJson;
+    nlohmann::json categoryJson = nlohmann::json::object();;
 
     to_json(categoryJson, *this);
     return categoryJson.dump();
