@@ -453,6 +453,11 @@ void App::performCreateItem(ExpenseTracker &et, cxxopts::ParseResult &args) {
 //                     DELETE
 // ------------------------------------------------
 
+/// @brief Attempts to delete the given category from the ExpenseTracker
+/// If the category is not in the ExpenseTracker, outputs an error.
+/// @param et ExpenseTracker object
+/// @param category Identifier of Category to be deleted
+/// @return True only if category was deleted.
 bool App::remove(ExpenseTracker& et, const std::string& category) {
   try {
     return et.deleteCategory(category);
@@ -463,6 +468,12 @@ bool App::remove(ExpenseTracker& et, const std::string& category) {
   
 }
 
+/// @brief Attempts to delete the given item from the given category.
+/// If the item does not exist in the category, outputs an error. 
+/// @param et ExpenseTracker object.
+/// @param catIdent Identifier of Category possibly containing item. 
+/// @param item Identifier of Item to delete. 
+/// @return True only if the Item was deleted. 
 bool App::remove(ExpenseTracker& et, const std::string& catIdent, const std::string& item) {
   Category& category = tryGetCategory(et, catIdent);
 
@@ -474,6 +485,13 @@ bool App::remove(ExpenseTracker& et, const std::string& catIdent, const std::str
   }
 }
 
+/// @brief Attempts to delete the given tag from an Item in a Category.
+/// If the tag does not exist on the Item, outputs an error message. 
+/// @param et ExpenseTracker object
+/// @param category Identifier of Category.
+/// @param id Identifier of Item.
+/// @param tag Tag to be deleted
+/// @return True only if Tag was deleted.
 bool App::remove(ExpenseTracker& et, const std::string& category, const std::string& id, const std::string& tag) {
   Item& item = tryGetItem(et, category, id);
 
@@ -485,12 +503,17 @@ bool App::remove(ExpenseTracker& et, const std::string& category, const std::str
   }
 }
 
+/// @brief Performs the action for deleting either a category, an item or a tag. 
+/// If an invalid combination of arguments, e.g. no arguments, tag without an item,
+/// or an item without a category, an error is output.
+/// @param et ExpenseTracker objects
+/// @param args arguments that may include category, item and tag.
 void App::performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
   
-  // Delete tag
+  
   if (args.count(CATEGORY_ARGUMENT) 
       && args.count(ITEM_ARGUMENT) 
-      && args.count(TAG_ARGUMENT)) {
+      && args.count(TAG_ARGUMENT)) { // Delete tag
 
       const std::string c = args[CATEGORY_ARGUMENT].as<std::string>();
       const std::string i = args[ITEM_ARGUMENT].as<std::string>();
@@ -499,8 +522,8 @@ void App::performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
       remove(et, c, i, t);
 
   } else if (args.count(CATEGORY_ARGUMENT) 
-      && args.count(ITEM_ARGUMENT) 
-      && !args.count(TAG_ARGUMENT)) { // Delete item
+             && args.count(ITEM_ARGUMENT) 
+             && !args.count(TAG_ARGUMENT)) { // Delete item
 
       const std::string c = args[CATEGORY_ARGUMENT].as<std::string>();
       const std::string i = args[ITEM_ARGUMENT].as<std::string>();
@@ -508,13 +531,12 @@ void App::performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
       remove(et, c, i);
 
   } else if (args.count(CATEGORY_ARGUMENT) 
-      && !args.count(ITEM_ARGUMENT) 
-      && !args.count(TAG_ARGUMENT)) { // Delete category
+             && !args.count(ITEM_ARGUMENT) 
+             && !args.count(TAG_ARGUMENT)) { // Delete category
 
       const std::string c = args[CATEGORY_ARGUMENT].as<std::string>();
         
       remove(et, c);
-      return;
 
   } else { // Missing arguments 
     std::cerr << ERROR_MISSING_DELETE_ARGUMENTS << std::endl; 

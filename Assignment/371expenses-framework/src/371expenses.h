@@ -168,10 +168,35 @@ void performCreateItem(ExpenseTracker &et, cxxopts::ParseResult &args);
 //                     DELETE
 // ------------------------------------------------
 
+/// @brief Attempts to delete the given category from the ExpenseTracker
+/// If the category is not in the ExpenseTracker, outputs an error.
+/// @param et ExpenseTracker object
+/// @param category Identifier of Category to be deleted
+/// @return True only if category was deleted.
 bool remove(ExpenseTracker& et, const std::string& category);
+
+/// @brief Attempts to delete the given item from the given category.
+/// If the item does not exist in the category, outputs an error. 
+/// @param et ExpenseTracker object.
+/// @param catIdent Identifier of Category possibly containing item. 
+/// @param item Identifier of Item to delete. 
+/// @return True only if the Item was deleted. 
 bool remove(ExpenseTracker& et, const std::string& category, const std::string& item);
+
+/// @brief Attempts to delete the given tag from an Item in a Category.
+/// If the tag does not exist on the Item, outputs an error message. 
+/// @param et ExpenseTracker object
+/// @param category Identifier of Category.
+/// @param id Identifier of Item.
+/// @param tag Tag to be deleted
+/// @return True only if Tag was deleted.
 bool remove(ExpenseTracker& et, const std::string& category, const std::string& item, const std::string &tag);
 
+/// @brief Performs the action for deleting either a category, an item or a tag. 
+/// If an invalid combination of arguments, e.g. no arguments, tag without an item,
+/// or an item without a category, an error is output.
+/// @param et ExpenseTracker objects
+/// @param args arguments that may include category, item and tag.
 void performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 
 // ------------------------------------------------
