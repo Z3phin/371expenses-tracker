@@ -481,39 +481,22 @@ bool App::remove(ExpenseTracker& et, const std::string& category) {
   
 }
 
-bool App::remove(ExpenseTracker& et, const std::string& category, const std::string& item) {
-  try {
-    et.getCategory(category);
-  } catch(std::out_of_range& ex) {
-    std::cerr << ERROR_INVALID_CATEGORY << std::endl;
-    throw ex; 
-  }
+bool App::remove(ExpenseTracker& et, const std::string& catIdent, const std::string& item) {
+  Category& category = tryGetCategory(et, catIdent);
 
   try {
-    return et.getCategory(category).deleteItem(item);
+    return category.deleteItem(item);
   } catch(std::out_of_range& ex) {
     std::cerr << ERROR_INVALID_ITEM << std::endl;
     throw ex; 
   }
 }
 
-bool App::remove(ExpenseTracker& et, const std::string& category, const std::string& item, const std::string& tag) {
-  try {
-    et.getCategory(category);
-  } catch(std::out_of_range& ex) {
-    std::cerr << ERROR_INVALID_CATEGORY << std::endl;
-    throw ex; 
-  }
+bool App::remove(ExpenseTracker& et, const std::string& category, const std::string& id, const std::string& tag) {
+  Item& item = tryGetItem(et, category, id);
 
   try {
-    et.getCategory(category).getItem(item);
-  } catch(std::out_of_range& ex) {
-    std::cerr << ERROR_INVALID_ITEM << std::endl;
-    throw ex; 
-  }
-
-  try {
-    return et.getCategory(category).getItem(item).deleteTag(tag);
+    return item.deleteTag(tag);
   } catch(std::out_of_range& ex) {
     std::cerr << ERROR_INVALID_TAG << std::endl;
     throw ex;
@@ -639,6 +622,17 @@ void App::performUpdateItem(ExpenseTracker &et, cxxopts::ParseResult &args) {
     update(item, args);
 }
 
+
+// ------------------------------------------------
+//                HELPER FUNCTIONS
+// ------------------------------------------------
+
+
+/// @brief Tries to get hte given category from the ExpenseTracker.
+/// If not successful, outputs an error message and an exception is thrown.
+/// @param et ExpenseTracker object.
+/// @param category Category identifer. 
+/// @return Refernence to the Category only if successful. 
 Category& App::tryGetCategory(ExpenseTracker& et, const std::string& category) {
     try {
         return et.getCategory(category);
@@ -648,6 +642,12 @@ Category& App::tryGetCategory(ExpenseTracker& et, const std::string& category) {
     }
 }
 
+/// @brief Tries to get the given item from the ExpenseTracker Category.
+/// If not successful, outputs an error message and an exception is thrown. 
+/// @param et ExpenseTracker object.
+/// @param category Category identifier. 
+/// @param item Item identifier.
+/// @return Reference to the Item only if successful. 
 Item& App::tryGetItem(ExpenseTracker& et, const std::string& category, const std::string& item) {
     try {
         et.getCategory(category);
@@ -664,6 +664,10 @@ Item& App::tryGetItem(ExpenseTracker& et, const std::string& category, const std
     }
 }
 
+/// @brief Tries to parse the given string to an amount.
+/// If not successful, outputs an error message and throws the exception.
+/// @param amountStr String to be parsed.
+/// @return amount only if successful. 
 double App::tryParseAmount(const std::string& amountStr) {
     try {
         return std::stod(amountStr);
@@ -673,10 +677,14 @@ double App::tryParseAmount(const std::string& amountStr) {
     }
 }
 
+/// @brief Tries to parse the given string to a Date.
+/// If not successful, outputs an error message and throws the exception.
+/// @param dateStr String to be parsed.
+/// @return Date only if parse was successful. 
 Date App::tryParseDate(const std::string& dateStr) {
     try {
         return Date(dateStr);
-    } catch (const std::exception &e) {
+    } catch (const std::invalid_argument &e) {
         std::cerr << ERROR_INVALID_DATE << std::endl;
         throw e;
     }
