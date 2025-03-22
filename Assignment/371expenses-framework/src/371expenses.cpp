@@ -273,19 +273,15 @@ void App::performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
 
     // No Category or Item -> ExpenseTracker
     if (!args.count(CATEGORY_ARGUMENT) && !args.count(ITEM_ARGUMENT)) {
-      std::cout << getJSON(et) << std::endl;
-      
-    } else  
 
-    // Just Category argument -> Category
-    if (args.count(CATEGORY_ARGUMENT) && !args.count(ITEM_ARGUMENT)) {
+      std::cout << getJSON(et) << std::endl;
+
+    } else if (args.count(CATEGORY_ARGUMENT) && !args.count(ITEM_ARGUMENT)) { // Just Category argument -> Category
       const std::string category = args[CATEGORY_ARGUMENT].as<std::string>();
+
       std::cout << getJSON(et, category) << std::endl;
 
-    } else 
-
-    // Category and Item argument -> Item
-    if (args.count(CATEGORY_ARGUMENT) && args.count(ITEM_ARGUMENT)) {
+    } else if (args.count(CATEGORY_ARGUMENT) && args.count(ITEM_ARGUMENT)) { // Category and Item argument -> Item
       const std::string item = args[ITEM_ARGUMENT].as<std::string>();
       const std::string category = args[CATEGORY_ARGUMENT].as<std::string>();
 
@@ -306,7 +302,7 @@ void App::performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
 /// @param et ExpenseTracker object.
 /// @return Sum of all items. 
 double App::getSum(ExpenseTracker &et) noexcept {
-  return et.getSum();
+    return et.getSum();
 }
 
 /// @brief Returns the sum of all the Items in the Category contained
@@ -316,12 +312,7 @@ double App::getSum(ExpenseTracker &et) noexcept {
 /// @return Sum of all Items in the Category
 /// @throws std::out_of_range if Category is not in ExpenseTracker object.
 double App::getSum(ExpenseTracker &et, const std::string &c) {
-  try {
-    return et.getCategory(c).getSum();
-  } catch (std::out_of_range &ex) {
-    std::cerr << ERROR_INVALID_CATEGORY << std::endl;
-    throw &ex; 
-  }
+    return tryGetCategory(et, c).getSum();
 }
 
 /// @brief Performs the Sum action. Accordingly to the arguments,
@@ -332,14 +323,15 @@ double App::getSum(ExpenseTracker &et, const std::string &c) {
 /// @param args Command line arguments that may include "category"
 /// @throws std::out_of_range if the Category is not in the ExpenseTracker.
 void App::performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
-  if (args.count(CATEGORY_ARGUMENT)) {
-    const std::string category = args[CATEGORY_ARGUMENT].as<std::string>();
+    if (args.count(CATEGORY_ARGUMENT)) {
+        const std::string category = args[CATEGORY_ARGUMENT].as<std::string>();
 
-    std::cout << getSum(et, category) << std::endl;
-    return;
-  }
-    
-  std::cout << getSum(et) << std::endl;
+        std::cout << getSum(et, category) << std::endl;
+      
+    } else {
+      
+        std::cout << getSum(et) << std::endl;
+    }
 }
 
 // ------------------------------------------------
