@@ -172,17 +172,26 @@ bool remove(ExpenseTracker& et, const std::string& category);
 bool remove(ExpenseTracker& et, const std::string& category, const std::string& item);
 bool remove(ExpenseTracker& et, const std::string& category, const std::string& item, const std::string &tag);
 
+void performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args);
+
+// ------------------------------------------------
+//                     UPDATE
+// ------------------------------------------------
+
 // Update category identifier
 void update(ExpenseTracker& et, const std::string& oldCategoryIdent, const std::string& newCategoryIdent);
 
 // update item 
 void update(Item& item, cxxopts::ParseResult &args);
 
-void performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 
 void performUpdateAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 void performUpdateCategory(ExpenseTracker &et, cxxopts::ParseResult &args);
 void performUpdateItem(ExpenseTracker &et, cxxopts::ParseResult &args);
+
+// ------------------------------------------------
+//                HELPER FUNCTIONS
+// ------------------------------------------------
 
 Category& tryGetCategory(ExpenseTracker& et, const std::string& category);
 Item& tryGetItem(ExpenseTracker& et, const std::string& category, const std::string& item);
