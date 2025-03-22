@@ -73,20 +73,23 @@ bool remove(ExpenseTracker& et, const std::string& category, const std::string& 
 // Update category identifier
 void update(ExpenseTracker& et, const std::string& oldCategoryIdent, const std::string& newCategoryIdent);
 
-// update item description
-void update(ExpenseTracker& et, const std::string& category, const std::string& item, const std::string& description);
-
-// updates item amount
-void update(ExpenseTracker& et, const std::string& category, const std::string& item, const double& amount);
-
-// update item date
-void update(ExpenseTracker& et, const std::string& category, const std::string& item, const Date& date);
+// update item 
+void update(Item& item, cxxopts::ParseResult &args);
 
 void performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 void performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 void performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 void performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 void performUpdateAction(ExpenseTracker &et, cxxopts::ParseResult &args);
+
+void performUpdateCategory(ExpenseTracker &et, cxxopts::ParseResult &args);
+void performUpdateItem(ExpenseTracker &et, cxxopts::ParseResult &args);
+
+Category& tryGetCategory(ExpenseTracker& et, const std::string& category);
+Item& tryGetItem(ExpenseTracker& et, const std::string& category, const std::string& item);
+
+double tryParseAmount(const std::string& amountStr);
+Date tryParseDate(const std::string& dateStr);
 
 
 } // namespace App
