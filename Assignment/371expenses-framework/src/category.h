@@ -103,6 +103,11 @@ class Category {
         /// item. (see addItem)
         /// @param other Category with items to be added to this Category. 
         void mergeItems(const Category &other) noexcept;
+
+        /// @brief Returns whether or not the given Item identifier is in the Category. 
+        /// @param itemIdent item to find. 
+        /// @return True if in the Category, otherwise false.
+        bool containsItem(const std::string& itemIdent) const noexcept;
     
         // ------------------------------------------------
         //              Operator Functions

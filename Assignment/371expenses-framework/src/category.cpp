@@ -218,6 +218,18 @@ void Category::mergeItems(const Category &other) noexcept {
     }
 }
 
+/// @brief Returns whether or not the given Item identifier is in the Category. 
+/// @param itemIdent item to find. 
+/// @return True if in the Category, otherwise false.
+bool Category::containsItem(const std::string& itemIdent) const noexcept {    
+    return itemMap.find(itemIdent) != itemMap.cend();
+}
+
+
+// ------------------------------------------------
+//              Operator Functions
+ // ------------------------------------------------
+
 
 // Example:
 //  Category cObj1{"categoryIdent1"};
