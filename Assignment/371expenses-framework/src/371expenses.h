@@ -52,7 +52,7 @@ std::string getJSON(ExpenseTracker &et);
 std::string getJSON(ExpenseTracker &et, const std::string &c);
 std::string getJSON(ExpenseTracker &et, const std::string &c, const std::string &id);
 
-double getSum(ExpenseTracker &et);
+double getSum(ExpenseTracker &et) noexcept;
 double getSum(ExpenseTracker &et, const std::string &c);
 
 Category& create(ExpenseTracker &et, 
