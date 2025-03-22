@@ -14,16 +14,17 @@
 #include <sstream>
 
 
-// -----------------------------------------------------
-//                  Date Class Functions
-// -----------------------------------------------------
 
 // ------------------------------------------------
-//                  Constructors
+//                  Constants
 // ------------------------------------------------
 
 const char DATE_REGEX[] = "([0-9]+)-([0-9]+)-([0-9]+)";
 const char DATE_DELIMITER = '-';
+
+// ------------------------------------------------
+//                  Constructors
+// ------------------------------------------------
 
 /// @brief Constructs a Date object with today's date.
 Date::Date() noexcept : year(0), month(0), day(0) {
@@ -228,23 +229,34 @@ bool operator>=(const Date& lhs, const Date& rhs) noexcept {
 //                  Helper Functions
 // -----------------------------------------------------
 
-// Checks whether or not the given year is a leap year.
+/// @brief Checks whether or not the given year is a leap year.
+/// @param year year to be checked.
+/// @return True if a leap year, otherwise false. 
 bool Date::isLeapYear(const unsigned int year) noexcept {
     return ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0));
 }
 
-// Checks whether the given value is a valid month value. 
+/// @brief Checks whether the given value is a valid month value. 
+/// @param month month to be checked.
+/// @return True if month is valid, otherwise false. 
 bool Date::isValidMonth(const unsigned int month) noexcept {
     return (month >= 1 && month <= 12);
 }
 
-// Checks whether the given value is a valid day value (regardless of month) 
+/// @brief Checks whether the given value is a valid day value (regardless of month)
+/// @param day day to be checked. 
+/// @return True if valid, otherwise false. 
 bool Date::isValidDay(const unsigned int day) noexcept {
     return (day >= 1 && day <= 31);
 }
 
-// Checks whether the given year, month and day are a valid combination 
-// (including number of days per month and leap years)
+/// @brief Checks whether the given year, month and day are a valid combination 
+/// (including number of days per month and leap years)
+/// @param year year to be checked
+/// @param month month to be checked.
+/// @param day day to be checked.
+/// @return True if the given year, month and day representa valid date, 
+/// otherwise false. 
 bool Date::isValidDate(const unsigned int year, 
                  const unsigned int month, 
                  const unsigned int day) noexcept {

@@ -13,11 +13,11 @@
 #include <set>
 #include <sstream>
 
-const char NEW_ITEM_RUNTIME_ERROR_MSG[] = "Could not create new item.";
+// ------------------------------------------------
+//                  Constants
+// ------------------------------------------------
 
-// -----------------------------------------------------
-//                  Category Class Functions
-// -----------------------------------------------------
+const char NEW_ITEM_RUNTIME_ERROR_MSG[] = "Could not create new item.";
 
 // ------------------------------------------------
 //                  Constructors

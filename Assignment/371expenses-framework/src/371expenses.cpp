@@ -10,6 +10,10 @@
 #include "371expenses.h"
 #include "lib_cxxopts.hpp"
 
+// ------------------------------------------------
+//                  Constants
+// ------------------------------------------------
+
 const char ACTION_ARG_CREATE[] = "create";
 const char ACTION_ARG_DELETE[] = "delete";
 const char ACTION_ARG_UPDATE[] = "update";

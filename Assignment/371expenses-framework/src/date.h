@@ -28,12 +28,28 @@ class Date {
         //                  Helper Functions
         // -----------------------------------------------------
 
+        /// @brief Checks whether or not the given year is a leap year.
+        /// @param year year to be checked.
+        /// @return True if a leap year, otherwise false. 
         static bool isLeapYear(const unsigned int year) noexcept;
 
+        /// @brief Checks whether the given value is a valid month value. 
+        /// @param month month to be checked.
+        /// @return True if month is valid, otherwise false. 
         static bool isValidMonth(const unsigned int month) noexcept;
 
+        /// @brief Checks whether the given value is a valid day value (regardless of month)
+        /// @param day day to be checked. 
+        /// @return True if valid, otherwise false. 
         static bool isValidDay(const unsigned int day) noexcept;
 
+        /// @brief Checks whether the given year, month and day are a valid combination 
+        /// (including number of days per month and leap years)
+        /// @param year year to be checked
+        /// @param month month to be checked.
+        /// @param day day to be checked.
+        /// @return True if the given year, month and day representa valid date, 
+        /// otherwise false. 
         static bool isValidDate(const unsigned int year,   
                                 const unsigned int month, 
                                 const unsigned int day) noexcept;
