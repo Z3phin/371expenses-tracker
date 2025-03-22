@@ -22,21 +22,6 @@ namespace App {
 
 const std::string STUDENT_NUMBER = "2212805";
 
-// Enums (short for enumerations) are similar to their Java implementation. It
-// is a user-defined type, used to assign names to internal constants in code,
-// instead of simply passing in integers/strings etc.
-//
-// For example, functions can take a value/constant from a specific enum and use
-// it in a switch statement, doing different things
-//
-// As such, it is a useful way for us to specify information in both a machine
-// and human-readable format.
-//
-// Unlike Java, enums in C++ only map to integer values. You can either let the
-// compiler generate the values automatically, in which it allocates a unique
-// integer (0-indexed). Or, you can set the value by giving the name followed by
-// = <value> (e.g. CREATE=0).
-//
 // This enum specifies the five different values we support in the action
 // program argument.
 enum Action { CREATE, SUM, JSON, DELETE, UPDATE };
@@ -203,16 +188,51 @@ void performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 //                     UPDATE
 // ------------------------------------------------
 
-// Update category identifier
+/// @brief Updates the given Category with the new identifier.
+/// If the given Category does not exist in the ExpenseTracker,
+/// an error is output.
+/// @param et ExpenseTracker object.
+/// @param oldCategoryIdent Old Category identifier to be updated.
+/// @param newCategoryIdent New Category identifier to update to. 
 void update(ExpenseTracker& et, const std::string& oldCategoryIdent, const std::string& newCategoryIdent);
 
-// update item 
+/// @brief Updates the given Item according to the given arguments, 
+/// either date, amount, and description. These can be updated 
+/// simulataneously 
+/// @param item Item whose properties may be updated.
+/// @param args arguments that may include description, amount or date.
 void update(Item& item, cxxopts::ParseResult &args);
 
+/// @brief Performs the action for updating either the identifier of category,
+/// or the properties, data, description or amount, of a specified item. 
+/// If an item is specified without a category, an error is output. 
+/// Similarly, if a category, item or erroneous data is given, an 
+/// an appropriate error is output. 
+/// @param et ExpenseTracker object
+/// @param args Arguments that may include category, item, description, 
+/// amount or date. 
 void performUpdateAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 
+/// @brief Perform the action of updating a category identifier. 
+/// A category identifier can be updated with the argument 
+/// --category oldIdentifier:newIdentifier.
+/// If this pattern is malformed or oldIdentifier is not a valid 
+/// category, an error is output.
+/// In the case that the newIdentifier is the same as an existing 
+/// category, the existing category will be overwritten/merged 
+/// with the updated category. (see addCategory()).
+/// @param et ExpenseTracker object
+/// @param args Arguments that contains --category
 void performUpdateCategory(ExpenseTracker &et, cxxopts::ParseResult &args);
 
+/// @brief Performs the update action on item specifically. Updating an item 
+/// requires at least one of description, amount or date arguments to be specified
+/// otherwise an error is output.
+/// Additional error messages may be output if erroneous data is given. 
+/// Otherwise, the item's properties will be updated to reflect the 
+/// specified arguments. 
+/// @param et ExpenseTracker object. 
+/// @param args Arguments that may include description, amount or date. 
 void performUpdateItem(ExpenseTracker &et, cxxopts::ParseResult &args);
 
 // ------------------------------------------------

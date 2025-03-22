@@ -474,7 +474,9 @@ bool App::remove(ExpenseTracker& et, const std::string& category) {
 /// @param catIdent Identifier of Category possibly containing item. 
 /// @param item Identifier of Item to delete. 
 /// @return True only if the Item was deleted. 
-bool App::remove(ExpenseTracker& et, const std::string& catIdent, const std::string& item) {
+bool App::remove(ExpenseTracker& et, 
+                 const std::string& catIdent, 
+                 const std::string& item) {
   Category& category = tryGetCategory(et, catIdent);
 
   try {
@@ -492,7 +494,11 @@ bool App::remove(ExpenseTracker& et, const std::string& catIdent, const std::str
 /// @param id Identifier of Item.
 /// @param tag Tag to be deleted
 /// @return True only if Tag was deleted.
-bool App::remove(ExpenseTracker& et, const std::string& category, const std::string& id, const std::string& tag) {
+bool App::remove(ExpenseTracker& et, 
+                 const std::string& category, 
+                 const std::string& id, 
+                 const std::string& tag) {
+
   Item& item = tryGetItem(et, category, id);
 
   try {
@@ -548,15 +554,29 @@ void App::performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
 //                     UPDATE
 // ------------------------------------------------
 
-// Update category identifier
-void App::update(ExpenseTracker& et, const std::string& oldCategoryIdent, const std::string& newCategoryIdent) {
+/// @brief Updates the given Category with the new identifier.
+/// If the given Category does not exist in the ExpenseTracker,
+/// an error is output.
+/// @param et ExpenseTracker object.
+/// @param oldCategoryIdent Old Category identifier to be updated.
+/// @param newCategoryIdent New Category identifier to update to. 
+void App::update(ExpenseTracker& et, 
+                 const std::string& oldCategoryIdent, 
+                 const std::string& newCategoryIdent) {
+
     Category category = tryGetCategory(et, oldCategoryIdent);
-    et.deleteCategory(oldCategoryIdent);
+    et.deleteCategory(oldCategoryIdent); 
     category.setIdent(newCategoryIdent);
     et.addCategory(category);
 }
 
+/// @brief Updates the given Item according to the given arguments, 
+/// either date, amount, and description. These can be updated 
+/// simulataneously 
+/// @param item Item whose properties may be updated.
+/// @param args arguments that may include description, amount or date.
 void App::update(Item& item, cxxopts::ParseResult &args) {
+
     // Update date
     if (args.count(DATE_ARGUMENT)) {
       Date date = tryParseDate(args[DATE_ARGUMENT].as<std::string>());
@@ -577,12 +597,20 @@ void App::update(Item& item, cxxopts::ParseResult &args) {
     }
 }
 
+/// @brief Performs the action for updating either the identifier of category,
+/// or the properties, data, description or amount, of a specified item. 
+/// If an item is specified without a category, an error is output. 
+/// Similarly, if a category, item or erroneous data is given, an 
+/// an appropriate error is output. 
+/// @param et ExpenseTracker object
+/// @param args Arguments that may include category, item, description, 
+/// amount or date. 
 void App::performUpdateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
 
     if (args.count(CATEGORY_ARGUMENT) && !args.count(ITEM_ARGUMENT)) { // Update Category
       performUpdateCategory(et, args);
 
-    } else if (args.count(CATEGORY_ARGUMENT) && args.count(ITEM_ARGUMENT)) {   // Update Item
+    } else if (args.count(CATEGORY_ARGUMENT) && args.count(ITEM_ARGUMENT)) { // Update Item
       performUpdateItem(et, args);
 
     } else { // Handle missing arguments
@@ -592,6 +620,16 @@ void App::performUpdateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
 
 }
 
+/// @brief Perform the action of updating a category identifier. 
+/// A category identifier can be updated with the argument 
+/// --category oldIdentifier:newIdentifier.
+/// If this pattern is malformed or oldIdentifier is not a valid 
+/// category, an error is output.
+/// In the case that the newIdentifier is the same as an existing 
+/// category, the existing category will be overwritten/merged 
+/// with the updated category. (see addCategory()).
+/// @param et ExpenseTracker object
+/// @param args Arguments that contains --category
 void App::performUpdateCategory(ExpenseTracker &et, cxxopts::ParseResult &args) {
     std::regex identifiersRegex(UPDATE_CATEGORY_IDENT_REGEX);
     std::cmatch identifiersMatch;
@@ -604,9 +642,19 @@ void App::performUpdateCategory(ExpenseTracker &et, cxxopts::ParseResult &args) 
         throw std::invalid_argument("args");
     }
 
-    update(et, std::string(identifiersMatch[1]), std::string(identifiersMatch[2]));
+    const std::string oldIdentifier = std::string(identifiersMatch[1]);
+    const std::string newIdentifier = std::string(identifiersMatch[2]);
+    update(et, oldIdentifier, newIdentifier);
 }
 
+/// @brief Performs the update action on item specifically. Updating an item 
+/// requires at least one of description, amount or date arguments to be specified
+/// otherwise an error is output.
+/// Additional error messages may be output if erroneous data is given. 
+/// Otherwise, the item's properties will be updated to reflect the 
+/// specified arguments. 
+/// @param et ExpenseTracker object. 
+/// @param args Arguments that may include description, amount or date. 
 void App::performUpdateItem(ExpenseTracker &et, cxxopts::ParseResult &args) {
 
     // Check if description, amount or date are present.
