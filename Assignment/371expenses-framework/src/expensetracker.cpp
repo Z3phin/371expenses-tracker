@@ -21,6 +21,7 @@
 const char NEW_CATEGORY_ERROR_MSG[] = "Could not add new category.";
 const char ADD_CATEGORY_ERROR_MSG[] = "Could not add category.";
 const char FILE_OPEN_ERROR_MSG[] = "File did not open successfully.";
+const char CATEGORY_OUT_OF_RANGE[] = "category";
 
 
 // ------------------------------------------------
@@ -123,7 +124,7 @@ bool ExpenseTracker::addCategory(const Category &category) {
 Category& ExpenseTracker::getCategory(const std::string &categoryIdentifier) const {
     const auto it = categoryMap.find(categoryIdentifier);
     if (it == categoryMap.cend()) {
-        throw std::out_of_range(categoryIdentifier);
+        throw std::out_of_range(CATEGORY_OUT_OF_RANGE);
     }   
 
     return *(it->second);
@@ -142,7 +143,7 @@ Category& ExpenseTracker::getCategory(const std::string &categoryIdentifier) con
 bool ExpenseTracker::deleteCategory(const std::string &categoryIdentifier) {
     const auto it = categoryMap.find(categoryIdentifier);
     if (it == categoryMap.cend()) {
-        throw std::out_of_range(categoryIdentifier);
+        throw std::out_of_range(CATEGORY_OUT_OF_RANGE);
     }   
     
     categoryMap.erase(it);
