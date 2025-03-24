@@ -27,11 +27,13 @@ const char ITEM_ARGUMENT[] = "item";
 const char DATE_ARGUMENT[] = "date";
 const char TAG_ARGUMENT[] = "tag";
 
+const char ERROR_INVALID_START[] = "Error: invalid ";
+const char ERROR_INVALID_END[] = " arguments(s).";
 const char ERROR_INVALID_ACTION[] = "Error: invalid action argument(s).";
 const char ERROR_INVALID_CATEGORY[] = "Error: invalid category argument(s).";
 const char ERROR_INVALID_ITEM[] = "Error: invalid item argument(s).";
-const char ERROR_INVALID_DATE[] = "Error: invalid date argument.";
-const char ERROR_INVALID_AMOUNT[] = "Error: invalid amount argument.";
+const char ERROR_INVALID_DATE[] = "Error: invalid date argument(s).";
+const char ERROR_INVALID_AMOUNT[] = "Error: invalid amount argument(s).";
 const char ERROR_INVALID_TAG[] = "Error: invalid tag argument(s).";
 
 const char ERROR_MISSING_CATEGORY[] = "Error: missing category argument(s).";
@@ -706,16 +708,9 @@ Category& App::tryGetCategory(ExpenseTracker& et, const std::string& category) {
 /// @return Reference to the Item only if successful. 
 Item& App::tryGetItem(ExpenseTracker& et, const std::string& category, const std::string& item) {
     try {
-        et.getCategory(category);
-    } catch (const std::out_of_range &ex) {
-        std::cerr << ERROR_INVALID_CATEGORY << std::endl;
-        throw ex; 
-    }
-
-    try {
         return et.getCategory(category).getItem(item);
     } catch (const std::out_of_range &ex) {
-        std::cerr << ERROR_INVALID_ITEM << std::endl;
+        std::cerr << ERROR_INVALID_START << ex.what() << ERROR_INVALID_END << std::endl;
         throw ex; 
     }
 }
