@@ -17,7 +17,8 @@
 //                  Constants
 // ------------------------------------------------
 
-const char NEW_ITEM_RUNTIME_ERROR_MSG[] = "Could not create new item.";
+const char NEW_ITEM_RUNTIME_ERROR[] = "Could not create new item.";
+const char ITEM_OUT_OF_RANGE[] = "item";
 
 // ------------------------------------------------
 //                  Constructors
@@ -104,8 +105,8 @@ Item& Category::newItem(const std::string &identifier,
             }
             return *(it->second);
 
-        } catch (...) { // ? 
-            throw std::runtime_error(NEW_ITEM_RUNTIME_ERROR_MSG);
+        } catch (...) {
+            throw std::runtime_error(NEW_ITEM_RUNTIME_ERROR);
         }
 
 }
@@ -156,7 +157,7 @@ Item& Category::getItem(const std::string identifier) const {
     const auto result = itemMap.find(identifier);
 
     if (result == itemMap.cend()) {
-        throw std::out_of_range(identifier);
+        throw std::out_of_range(ITEM_OUT_OF_RANGE);
     } 
 
     // extract the item from the map
@@ -181,11 +182,7 @@ double Category::getSum() const noexcept {
     return sum; 
 }
 
-// A function, deleteItem, that takes one parameter, an Item
-// identifier (a string), deletes the item with that identifier from the
-// container, and returns true if the Item was deleted. If no Item exists, throw
-// an appropriate exception.
-//
+
 // Example:
 //  Category cObj{"categoryIdent"};
 //  cObj.newItem("newItemName");
@@ -199,7 +196,7 @@ double Category::getSum() const noexcept {
 bool Category::deleteItem(const std::string &identifier) {
     auto it = itemMap.find(identifier);
     if (it == itemMap.end()) {
-        throw std::out_of_range(identifier);
+        throw std::out_of_range(ITEM_OUT_OF_RANGE);
     }
 
     itemMap.erase(it);
