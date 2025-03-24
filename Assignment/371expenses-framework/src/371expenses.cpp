@@ -28,7 +28,7 @@ const char DATE_ARGUMENT[] = "date";
 const char TAG_ARGUMENT[] = "tag";
 
 const char ERROR_INVALID_START[] = "Error: invalid ";
-const char ERROR_INVALID_END[] = " arguments(s).";
+const char ERROR_INVALID_END[] = " argument(s).";
 const char ERROR_INVALID_ACTION[] = "Error: invalid action argument(s).";
 const char ERROR_INVALID_CATEGORY[] = "Error: invalid category argument(s).";
 const char ERROR_INVALID_ITEM[] = "Error: invalid item argument(s).";
