@@ -29,10 +29,10 @@ const char DESCRIPTION_JSON_ELEMENT[] = "description";
 /// @param _description description of this item.
 /// @param _amount amount belonging to this expense item (e.g £42.11)
 /// @param _date date of this item. 
-Item::Item(const std::string &_identifier, 
-           const std::string &_description, 
-           const double &_amount, 
-           const Date &_date) noexcept
+Item::Item(const std::string& _identifier, 
+           const std::string& _description, 
+           const double& _amount, 
+           const Date& _date) noexcept
 
             : identifier(_identifier), 
             description(_description), 
@@ -42,7 +42,7 @@ Item::Item(const std::string &_identifier,
 
 
 // ------------------------------------------------
-//                      Getters
+//                      Ident
 // ------------------------------------------------
 
 /// @brief Returns the identifier for this Item.
@@ -51,54 +51,30 @@ std::string Item::getIdent() const noexcept {
     return this->identifier;
 }
 
+// ------------------------------------------------
+//                    Description
+// ------------------------------------------------
+
 /// @brief Returns the description of this item.
 /// @return the description of this item. 
 std::string Item::getDescription() const noexcept {
     return this->description;
 }
 
-/// @brief Returns the amount for this Item.
-/// @return the amount for this Item.
-double Item::getAmount() const noexcept {
-    return this->amount; 
-}
-
-/// @brief Gets the date belonging to this item.
-/// @return Date object belonging to this item
-Date Item::getDate() const noexcept {
-    return this->date;
-}
-
-// ------------------------------------------------
-//                     Setters
-// ------------------------------------------------
-
 /// @brief Sets the description of this Item.
 /// @param _description new description.
-void Item::setDescription(const std::string &_description) noexcept {
+void Item::setDescription(const std::string& _description) noexcept {
     this->description = _description; 
 }
 
-/// @brief Updates the amount for this item.
-/// @param _amount new amount. 
-void Item::setAmount(const double &_amount) noexcept {
-    this->amount = _amount;  
-}
-
-/// @brief Updates the date belonging to this Item.
-/// @param _date new date for this item. 
-void Item::setDate(const Date &_date) noexcept {
-    this->date = _date; 
-}
-
 // ------------------------------------------------
-//                 Tag Functions
+//                       Tags
 // ------------------------------------------------
 
 /// @brief Adds the provided tag to the tags attached to this Item, only if it not already an existing tag.
 /// @param tag tag to tbe added
 /// @return True if the tag was added, otherwise false 
-bool Item::addTag(const std::string &tag) noexcept {
+bool Item::addTag(const std::string& tag) noexcept {
     bool contains = containsTag(tag);
     if (!contains) {
         tags.push_back(tag);
@@ -110,7 +86,7 @@ bool Item::addTag(const std::string &tag) noexcept {
 /// @param tag tag to be deleted
 /// @return True if this tag was deleted. 
 /// @throw std::out_of_range - thrown when the given tag does not exist.
-bool Item::deleteTag(const std::string &tag) {
+bool Item::deleteTag(const std::string& tag) {
     auto it = std::find(tags.begin(), tags.end(), tag);
     if (it == tags.end()) {
         throw std::out_of_range(TAG_EXCEPTION);
@@ -129,7 +105,7 @@ unsigned int Item::numTags() const noexcept {
 /// @brief Checks whether the provided string is a tag attached to this object. 
 /// @param tag string to be checked. 
 /// @return True if the tag exists. Otherwise return false.
-bool Item::containsTag(const std::string &tag) const noexcept {
+bool Item::containsTag(const std::string& tag) const noexcept {
     return std::find(tags.cbegin(), tags.cend(), tag) != tags.end(); 
 }
 
@@ -142,7 +118,39 @@ void Item::mergeTags(const Item& other) noexcept {
 }
 
 // ------------------------------------------------
-//               JSON Representation 
+//                      Amount
+// ------------------------------------------------
+
+/// @brief Returns the amount for this Item.
+/// @return the amount for this Item.
+double Item::getAmount() const noexcept {
+    return this->amount; 
+}
+
+/// @brief Updates the amount for this item.
+/// @param _amount new amount. 
+void Item::setAmount(const double& _amount) noexcept {
+    this->amount = _amount;  
+}
+
+// ------------------------------------------------
+//                       Date
+// ------------------------------------------------
+
+/// @brief Gets the date belonging to this item.
+/// @return Date object belonging to this item
+Date Item::getDate() const noexcept {
+    return this->date;
+}
+
+/// @brief Updates the date belonging to this Item.
+/// @param _date new date for this item. 
+void Item::setDate(const Date& _date) noexcept {
+    this->date = _date; 
+}
+
+// ------------------------------------------------
+//            String and JSON Representation 
 // ------------------------------------------------
 
 /// @brief Returns a std::string of the JSON representation of the data in this Item in the format:

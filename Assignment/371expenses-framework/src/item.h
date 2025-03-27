@@ -38,67 +38,50 @@ class Item {
         /// @param _description description of this item.
         /// @param _amount amount belonging to this expense item (e.g £42.11)
         /// @param _date date of this item. 
-        Item(const std::string &_identifier, 
-             const std::string &_description, 
-             const double &_amount, 
-             const Date &_date) noexcept;
+        Item(const std::string& _identifier, 
+             const std::string& _description, 
+             const double& _amount, 
+             const Date& _date) noexcept;
 
         // ------------------------------------------------
-        //                      Getters
-        // ------------------------------------------------
+        //                      Ident
+        // ------------------------------------------------    
 
         /// @brief Returns the identifier for this Item.
         /// @return identifier of this item.
-        std::string getIdent() const noexcept; 
+        std::string getIdent() const noexcept;
+
+        // ------------------------------------------------
+        //                    Description
+        // ------------------------------------------------
 
         /// @brief Returns the description of this item.
         /// @return the description of this item. 
         std::string getDescription() const noexcept;
 
-        /// @brief Returns the amount for this Item.
-        /// @return the amount for this Item.
-        double getAmount() const noexcept;
-
-        /// @brief Gets the date belonging to this item.
-        /// @return Date object belonging to this item
-        Date getDate() const noexcept;
-
-        // ------------------------------------------------
-        //                      Setters
-        // ------------------------------------------------
-
         /// @brief Sets the description of this Item.
         /// @param _description new description.
-        void setDescription(const std::string &_description) noexcept;
-
-        /// @brief Updates the amount for this item.
-        /// @param _amount new amount. 
-        void setAmount(const double &_amount) noexcept;
-
-        /// @brief Updates the date belonging to this Item.
-        /// @param _date new date for this item. 
-        void setDate(const Date &_date) noexcept;
-    
+        void setDescription(const std::string& _description) noexcept;
 
         // ------------------------------------------------
-        //                  Tag Functions 
+        //                       Tags
         // ------------------------------------------------
 
-        /// @brief Adds the provided tag to the tags attached to this Item, only if it not already an existing tag.
+         /// @brief Adds the provided tag to the tags attached to this Item, only if it not already an existing tag.
         /// @param tag tag to tbe added
         /// @return True if the tag was added, otherwise false 
-        bool addTag(const std::string &tag) noexcept;
+        bool addTag(const std::string& tag) noexcept;
 
         /// @brief Deletes the provided tag from this Item's tags
         /// @param tag tag to be deleted
         /// @return True if this tag was deleted. 
         /// @throw std::out_of_range - thrown when the given tag does not exist.
-        bool deleteTag(const std::string &tag);
+        bool deleteTag(const std::string& tag);
 
         /// @brief Checks whether the provided string is a tag attached to this object. 
         /// @param tag string to be checked. 
         /// @return True if the tag exists. Otherwise return false.
-        bool containsTag(const std::string &tag) const noexcept;
+        bool containsTag(const std::string& tag) const noexcept;
 
         /// @brief Returns the number of tags belonging to this item
         /// @return number of tags.
@@ -108,8 +91,33 @@ class Item {
         /// @param other Item with tags to be merged into this object.
         void mergeTags(const Item& other) noexcept;        
 
+
         // ------------------------------------------------
-        //               JSON Representation 
+        //                      Amount
+        // ------------------------------------------------
+
+        /// @brief Returns the amount for this Item.
+        /// @return the amount for this Item.
+        double getAmount() const noexcept;
+
+        /// @brief Updates the amount for this item.
+        /// @param _amount new amount. 
+        void setAmount(const double& _amount) noexcept;
+
+        // ------------------------------------------------
+        //                       Date
+        // ------------------------------------------------
+
+        /// @brief Gets the date belonging to this item.
+        /// @return Date object belonging to this item
+        Date getDate() const noexcept;
+
+        /// @brief Updates the date belonging to this Item.
+        /// @param _date new date for this item. 
+        void setDate(const Date& _date) noexcept;
+
+        // ------------------------------------------------
+        //          String and JSON Representation 
         // ------------------------------------------------
 
         /// @brief Returns a std::string of the JSON representation of the data in this Item in the format:
