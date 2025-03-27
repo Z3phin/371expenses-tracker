@@ -190,7 +190,7 @@ cxxopts::Options App::cxxoptsSetup() {
 /// @param args arguments from cxxopts.
 /// @return Action value based on action argument. 
 /// @throws std::invalid_argument exception if an invalid value is given. 
-App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
+App::Action App::parseActionArgument(const cxxopts::ParseResult& args) {
   std::string input = args["action"].as<std::string>();
 
   for (int i = 0; i < (int) input.length(); i++) {
@@ -222,7 +222,7 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
 /// ExpenseTracker object. 
 /// @param etObj 
 /// @return JSON representation of ExpenseTracker as a string. 
-std::string App::getJSON(ExpenseTracker &etObj) {
+std::string App::getJSON(const ExpenseTracker& etObj) {
   return etObj.str();
 }
 
@@ -238,7 +238,7 @@ std::string App::getJSON(ExpenseTracker &etObj) {
 /// @param c Category identifier
 /// @return JSON represenation of Category in ExpenseTracker as a string. 
 /// @throws std::out_of_range if Category is not in ExpenseTracker object.
-std::string App::getJSON(ExpenseTracker &etObj, const std::string &c) {
+std::string App::getJSON(const ExpenseTracker& etObj, const std::string& c) {
   return tryGetCategory(etObj, c).str();
 }
 
@@ -255,9 +255,9 @@ std::string App::getJSON(ExpenseTracker &etObj, const std::string &c) {
 /// @param id Item identifier.
 /// @return JSON representation of Item as a string.
 /// @throws std::out_of_range if Category or Item is not in ExpenseTracker.
-std::string App::getJSON(ExpenseTracker &etObj, 
-                         const std::string &c,
-                         const std::string &id) {
+std::string App::getJSON(const ExpenseTracker& etObj, 
+                         const std::string& c,
+                         const std::string& id) {
 
   return tryGetItem(etObj, c, id).str();
 }
@@ -278,7 +278,7 @@ std::string App::getJSON(ExpenseTracker &etObj,
 /// of the two is given (i.e. item without a category).
 /// std::out_of_range if the category or item are not in the ExpenseTracker
 /// or Category respectively. 
-void App::performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
+void App::performJsonAction(const ExpenseTracker& et, const cxxopts::ParseResult& args) {
 
     
     if (!args.count(CATEGORY_ARGUMENT) 
@@ -315,7 +315,7 @@ void App::performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
 /// @brief Returns the sum of all the Items in the ExpenseTracker object.
 /// @param et ExpenseTracker object.
 /// @return Sum of all items. 
-double App::getSum(ExpenseTracker &et) noexcept {
+double App::getSum(const ExpenseTracker& et) noexcept {
     return et.getSum();
 }
 
@@ -325,7 +325,7 @@ double App::getSum(ExpenseTracker &et) noexcept {
 /// @param c Category identifier. 
 /// @return Sum of all Items in the Category
 /// @throws std::out_of_range if Category is not in ExpenseTracker object.
-double App::getSum(ExpenseTracker &et, const std::string &c) {
+double App::getSum(const ExpenseTracker& et, const std::string& c) {
     return tryGetCategory(et, c).getSum();
 }
 
@@ -336,7 +336,7 @@ double App::getSum(ExpenseTracker &et, const std::string &c) {
 /// @param et ExpenseTracker object.
 /// @param args Command line arguments that may include "category"
 /// @throws std::out_of_range if the Category is not in the ExpenseTracker.
-void App::performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
+void App::performSumAction(const ExpenseTracker& et, const cxxopts::ParseResult& args) {
     if (args.count(CATEGORY_ARGUMENT)) {
         const std::string category = args[CATEGORY_ARGUMENT].as<std::string>();
 
@@ -370,11 +370,11 @@ Category& App::create(ExpenseTracker &et,
 /// @param desc Description of Item.
 /// @param amount Amount (£) of Item.
 /// @return Reference to the created or already existing Item.
-Item& App::create(ExpenseTracker &et, 
-                const std::string &c,
-                const std::string &id,
-                const std::string &desc,
-                const double &amount) {
+Item& App::create(ExpenseTracker& et, 
+                const std::string& c,
+                const std::string& id,
+                const std::string& desc,
+                const double& amount) {
 
     Category& category = tryGetCategory(et, c);
     if (!category.containsItem(id)) {
@@ -403,7 +403,7 @@ void App::addTags(Item& item, const std::string& tagList) {
 /// required properties are missing, for example --description for item, an error occurs. 
 /// @param et ExpenseTracker object
 /// @param args arguments including --category, --item and item's properties
-void App::performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
+void App::performCreateAction(ExpenseTracker &et, const cxxopts::ParseResult &args) {
   
   if (args.count(CATEGORY_ARGUMENT) // Just category -> new Category
       && !args.count(ITEM_ARGUMENT) 
@@ -434,7 +434,7 @@ void App::performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
 /// specified, today's date is attached to the created item.
 /// @param et ExpenseTracker to add the item to.
 /// @param args arguments including category, item, description, amount, date and tags.
-void App::performCreateItem(ExpenseTracker &et, cxxopts::ParseResult &args) {
+void App::performCreateItem(ExpenseTracker& et, const cxxopts::ParseResult& args) {
     const std::string c = args[CATEGORY_ARGUMENT].as<std::string>();
     const std::string id = args[ITEM_ARGUMENT].as<std::string>();
     const std::string desc = args[DESCRIPTION_ARGUMENT].as<std::string>();
@@ -521,7 +521,7 @@ bool App::remove(ExpenseTracker& et,
 /// or an item without a category, an error is output.
 /// @param et ExpenseTracker objects
 /// @param args arguments that may include category, item and tag.
-void App::performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
+void App::performDeleteAction(ExpenseTracker& et, const cxxopts::ParseResult& args) {
   
   
   if (args.count(CATEGORY_ARGUMENT) 
@@ -582,7 +582,7 @@ void App::update(ExpenseTracker& et,
 /// simulataneously 
 /// @param item Item whose properties may be updated.
 /// @param args arguments that may include description, amount or date.
-void App::update(Item& item, cxxopts::ParseResult &args) {
+void App::update(Item& item, const cxxopts::ParseResult &args) {
 
     // Update date
     if (args.count(DATE_ARGUMENT)) {
@@ -612,7 +612,7 @@ void App::update(Item& item, cxxopts::ParseResult &args) {
 /// @param et ExpenseTracker object
 /// @param args Arguments that may include category, item, description, 
 /// amount or date. 
-void App::performUpdateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
+void App::performUpdateAction(ExpenseTracker& et, const cxxopts::ParseResult& args) {
 
     if (args.count(CATEGORY_ARGUMENT) && !args.count(ITEM_ARGUMENT)) { // Update Category
       performUpdateCategory(et, args);
@@ -636,7 +636,7 @@ void App::performUpdateAction(ExpenseTracker &et, cxxopts::ParseResult &args) {
 /// category, see addCategory() for this behaviour.
 /// @param et ExpenseTracker object
 /// @param args Arguments that contains --category
-void App::performUpdateCategory(ExpenseTracker &et, cxxopts::ParseResult &args) {
+void App::performUpdateCategory(ExpenseTracker& et, const cxxopts::ParseResult& args) {
     std::regex identifiersRegex(UPDATE_CATEGORY_IDENT_REGEX);
     std::cmatch identifiersMatch;
 
@@ -661,7 +661,7 @@ void App::performUpdateCategory(ExpenseTracker &et, cxxopts::ParseResult &args) 
 /// specified arguments. 
 /// @param et ExpenseTracker object. 
 /// @param args Arguments that may include description, amount or date. 
-void App::performUpdateItem(ExpenseTracker &et, cxxopts::ParseResult &args) {
+void App::performUpdateItem(ExpenseTracker& et, const cxxopts::ParseResult& args) {
 
     // Check if description, amount or date are present.
     if (!(args.count(DESCRIPTION_ARGUMENT) 
@@ -691,7 +691,7 @@ void App::performUpdateItem(ExpenseTracker &et, cxxopts::ParseResult &args) {
 /// @param et ExpenseTracker object.
 /// @param category Category identifer. 
 /// @return Refernence to the Category only if successful. 
-Category& App::tryGetCategory(ExpenseTracker& et, const std::string& category) {
+Category& App::tryGetCategory(const ExpenseTracker& et, const std::string& category) {
     try {
         return et.getCategory(category);
     } catch (const std::out_of_range &ex) {
@@ -706,7 +706,7 @@ Category& App::tryGetCategory(ExpenseTracker& et, const std::string& category) {
 /// @param category Category identifier. 
 /// @param item Item identifier.
 /// @return Reference to the Item only if successful. 
-Item& App::tryGetItem(ExpenseTracker& et, const std::string& category, const std::string& item) {
+Item& App::tryGetItem(const ExpenseTracker& et, const std::string& category, const std::string& item) {
     try {
         return et.getCategory(category).getItem(item);
     } catch (const std::out_of_range &ex) {

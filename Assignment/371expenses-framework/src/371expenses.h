@@ -49,7 +49,7 @@ cxxopts::Options cxxoptsSetup();
 /// @param args arguments from cxxopts.
 /// @return Action value based on action argument. 
 /// @throws std::invalid_argument exception if an invalid value is given. 
-App::Action parseActionArgument(cxxopts::ParseResult &args);
+App::Action parseActionArgument(const cxxopts::ParseResult& args);
 
 // ------------------------------------------------
 //                      JSON 
@@ -60,7 +60,7 @@ App::Action parseActionArgument(cxxopts::ParseResult &args);
 /// ExpenseTracker object. 
 /// @param etObj 
 /// @return JSON representation of ExpenseTracker as a string. 
-std::string getJSON(ExpenseTracker &et);
+std::string getJSON(const ExpenseTracker& et);
 
 /// @brief Returns a std::string containing the JSON representation of a 
 /// specific Category in an ExpenseTracker object. 
@@ -68,7 +68,7 @@ std::string getJSON(ExpenseTracker &et);
 /// @param c Category identifier
 /// @return JSON represenation of Category in ExpenseTracker as a string. 
 /// @throws std::out_of_range if Category is not in ExpenseTracker object.
-std::string getJSON(ExpenseTracker &et, const std::string &c);
+std::string getJSON(const ExpenseTracker& et, const std::string& c);
 
 /// @brief Returns a std::string containing the JSON representation of a 
 /// specific Item in a ExpenseTracker object.
@@ -77,7 +77,7 @@ std::string getJSON(ExpenseTracker &et, const std::string &c);
 /// @param id Item identifier.
 /// @return JSON representation of Item as a string.
 /// @throws std::out_of_range if Category or Item is not in ExpenseTracker.
-std::string getJSON(ExpenseTracker &et, const std::string &c, const std::string &id);
+std::string getJSON(const ExpenseTracker& et, const std::string& c, const std::string& id);
 
 /// @brief Performs the JSON action. According to the arguments:
 ///
@@ -95,7 +95,7 @@ std::string getJSON(ExpenseTracker &et, const std::string &c, const std::string 
 /// of the two is given (i.e. item without a category).
 /// std::out_of_range if the category or item are not in the ExpenseTracker
 /// or Category respectively.
-void performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args);
+void performJsonAction(const ExpenseTracker& et, const cxxopts::ParseResult& args);
 
 // ------------------------------------------------
 //                      SUM
@@ -104,7 +104,7 @@ void performJsonAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 /// @brief Returns the sum of all the Items in the ExpenseTracker object.
 /// @param et ExpenseTracker object.
 /// @return Sum of all items. 
-double getSum(ExpenseTracker &et) noexcept;
+double getSum(const ExpenseTracker& et) noexcept;
 
 /// @brief Returns the sum of all the Items in the Category contained
 /// in the ExpenseTracker object. 
@@ -112,7 +112,7 @@ double getSum(ExpenseTracker &et) noexcept;
 /// @param c Category identifier. 
 /// @return Sum of all Items in the Category
 /// @throws std::out_of_range if Category is not in ExpenseTracker object.
-double getSum(ExpenseTracker &et, const std::string &c);
+double getSum(const ExpenseTracker& et, const std::string& c);
 
 /// @brief Performs the Sum action. Accordingly to the arguments,
 /// either the sum of all items in the whole ExpenseTracker is printed,
@@ -121,7 +121,7 @@ double getSum(ExpenseTracker &et, const std::string &c);
 /// @param et ExpenseTracker object.
 /// @param args Command line arguments that may include "category"
 /// @throws std::out_of_range if the Category is not in the ExpenseTracker.
-void performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args);
+void performSumAction(const ExpenseTracker& et, const cxxopts::ParseResult& args);
 
 // ------------------------------------------------
 //                     CREATE
@@ -132,7 +132,7 @@ void performSumAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 /// @param et ExpenseTracker object.
 /// @param c Identifier of Category to create
 /// @return Reference to Category created.  
-Category& create(ExpenseTracker &et, const std::string &c);      
+Category& create(ExpenseTracker& et, const std::string& c);      
 
 /// @brief Creates a new Item in the given Category only if it does not exist
 /// already.
@@ -142,11 +142,11 @@ Category& create(ExpenseTracker &et, const std::string &c);
 /// @param desc Description of Item.
 /// @param amount Amount (£) of Item.
 /// @return Reference to the created or already existing Item.
-Item& create(ExpenseTracker &et, 
-                const std::string &c,
-                const std::string &id,
-                const std::string &desc,
-                const double &amount);
+Item& create(ExpenseTracker& et, 
+                const std::string& c,
+                const std::string& id,
+                const std::string& desc,
+                const double& amount);
 
 /// @brief Adds a list of comma separated tags to the item.
 /// @param item Item to add tags to.
@@ -158,7 +158,7 @@ void addTags(Item& item, const std::string& tagList);
 /// required properties are missing, for example --description for item, an error occurs. 
 /// @param et ExpenseTracker object
 /// @param args arguments including --category, --item and item's properties
-void performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args);
+void performCreateAction(ExpenseTracker& et, const cxxopts::ParseResult& args);
 
 /// @brief Performs the actions for creating an item specifically. An item requires
 /// an identifier, a description, an amount (£), and the category it belongs to 
@@ -166,7 +166,7 @@ void performCreateAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 /// specified, today's date is attached to the created item.
 /// @param et ExpenseTracker to add the item to.
 /// @param args arguments including category, item, description, amount, date and tags.
-void performCreateItem(ExpenseTracker &et, cxxopts::ParseResult &args);
+void performCreateItem(ExpenseTracker& et, const cxxopts::ParseResult& args);
 
 // ------------------------------------------------
 //                     DELETE
@@ -201,7 +201,7 @@ bool remove(ExpenseTracker& et, const std::string& category, const std::string& 
 /// or an item without a category, an error is output.
 /// @param et ExpenseTracker objects
 /// @param args arguments that may include category, item and tag.
-void performDeleteAction(ExpenseTracker &et, cxxopts::ParseResult &args);
+void performDeleteAction(ExpenseTracker& et, const cxxopts::ParseResult& args);
 
 // ------------------------------------------------
 //                     UPDATE
@@ -220,7 +220,7 @@ void update(ExpenseTracker& et, const std::string& oldCategoryIdent, const std::
 /// simulataneously 
 /// @param item Item whose properties may be updated.
 /// @param args arguments that may include description, amount or date.
-void update(Item& item, cxxopts::ParseResult &args);
+void update(Item& item, const cxxopts::ParseResult& args);
 
 /// @brief Performs the action for updating either the identifier of category,
 /// or the properties, data, description or amount, of a specified item. 
@@ -230,7 +230,7 @@ void update(Item& item, cxxopts::ParseResult &args);
 /// @param et ExpenseTracker object
 /// @param args Arguments that may include category, item, description, 
 /// amount or date. 
-void performUpdateAction(ExpenseTracker &et, cxxopts::ParseResult &args);
+void performUpdateAction(ExpenseTracker& et, const cxxopts::ParseResult& args);
 
 /// @brief Perform the action of updating a category identifier. 
 /// A category identifier can be updated with the argument 
@@ -242,7 +242,7 @@ void performUpdateAction(ExpenseTracker &et, cxxopts::ParseResult &args);
 /// with the updated category. (see addCategory()).
 /// @param et ExpenseTracker object
 /// @param args Arguments that contains --category
-void performUpdateCategory(ExpenseTracker &et, cxxopts::ParseResult &args);
+void performUpdateCategory(ExpenseTracker& et, const cxxopts::ParseResult& args);
 
 /// @brief Performs the update action on item specifically. Updating an item 
 /// requires at least one of description, amount or date arguments to be specified
@@ -252,7 +252,7 @@ void performUpdateCategory(ExpenseTracker &et, cxxopts::ParseResult &args);
 /// specified arguments. 
 /// @param et ExpenseTracker object. 
 /// @param args Arguments that may include description, amount or date. 
-void performUpdateItem(ExpenseTracker &et, cxxopts::ParseResult &args);
+void performUpdateItem(ExpenseTracker& et, const cxxopts::ParseResult& args);
 
 // ------------------------------------------------
 //                HELPER FUNCTIONS
@@ -263,7 +263,7 @@ void performUpdateItem(ExpenseTracker &et, cxxopts::ParseResult &args);
 /// @param et ExpenseTracker object.
 /// @param category Category identifer. 
 /// @return Refernence to the Category only if successful. 
-Category& tryGetCategory(ExpenseTracker& et, const std::string& category);
+Category& tryGetCategory(const ExpenseTracker& et, const std::string& category);
 
 /// @brief Tries to get the given item from the ExpenseTracker Category.
 /// If not successful, outputs an error message and an exception is thrown. 
@@ -271,7 +271,7 @@ Category& tryGetCategory(ExpenseTracker& et, const std::string& category);
 /// @param category Category identifier. 
 /// @param item Item identifier.
 /// @return Reference to the Item only if successful. 
-Item& tryGetItem(ExpenseTracker& et, const std::string& category, const std::string& item);
+Item& tryGetItem(const ExpenseTracker& et, const std::string& category, const std::string& item);
 
 /// @brief Tries to parse the given string to an amount.
 /// If not successful, outputs an error message and throws the exception.
