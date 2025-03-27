@@ -66,10 +66,10 @@ class Category {
         /// @param amount amount of the new Item object. 
         /// @param date date of the new Item object. 
         /// @return Reference to the new Item object.
-        Item& newItem(const std::string &identifier, 
-                      const std::string &description, 
-                      const double &amount,
-                      const Date &date);
+        Item& newItem(const std::string& identifier, 
+                      const std::string& description, 
+                      const double& amount,
+                      const Date& date);
 
         /// @brief Adds the given Item object to the Category or merges with an existing
         /// Item in the Category if it shares the same identifier.  
@@ -78,14 +78,14 @@ class Category {
         /// amount and date of the new Item will be overwrite the exising item. 
         /// @param item item to be added
         /// @return True if the item was added, false if it was merged with an existing object. 
-        bool addItem(const Item &item) noexcept;
+        bool addItem(const Item& item) noexcept;
 
         /// @brief Attempts to find an Item in the Category with the given identifier 
         /// @param identifier identifier of Item to be retrieved
         /// @return Reference to the Item only if it is in this Category. 
         /// @throws std::out_of_range exception if an Item with a matching identifier
         /// could not be found.
-        Item& getItem(const std::string _identifier) const;
+        Item& getItem(const std::string& _identifier) const;
 
         /// @brief Returns the sum of all Item amounts in the Category
         /// @return sum of all amounts. If no items are in this category, returns 0.
@@ -96,13 +96,13 @@ class Category {
         /// @return True only if the item was deleted.
         /// @throws std::out_of_range exception if the Item with the given identifier
         /// could not be found in the category.
-        bool deleteItem(const std::string &identifier);
+        bool deleteItem(const std::string& identifier);
 
         /// @brief Adds all the items in the given Category object to this Category. 
         /// If this category already contains an item, it is merged/overwritten by the
         /// item. (see addItem)
         /// @param other Category with items to be added to this Category. 
-        void mergeItems(const Category &other) noexcept;
+        void mergeItems(const Category& other) noexcept;
 
         /// @brief Returns whether or not the given Item identifier is in the Category. 
         /// @param itemIdent item to find. 
@@ -118,14 +118,14 @@ class Category {
         /// @param lhs left hand side Category object. 
         /// @param rhs right hand side Category object. 
         /// @return True if the two categories have the same identifier and equal Items, otherwise false.
-        friend bool operator==(const Category &lhs, const Category &rhs) noexcept;
+        friend bool operator==(const Category& lhs, const Category& rhs) noexcept;
 
         /// @brief Compares two Category objects based on their identifier and Item objects 
         /// they contain returns if they are not equal. 
         /// @param lhs left hand side Category object. 
         /// @param rhs right hand side Category object. 
         /// @return True if the two categories do not have the same identifier and equal Items, otherwise false.
-        friend bool operator!=(const Category &lhs, const Category &rhs) noexcept;
+        friend bool operator!=(const Category& lhs, const Category& rhs) noexcept;
 
         // ------------------------------------------------
         //              JSON Representation
@@ -146,7 +146,7 @@ class Category {
         /// @brief Takes a JSON represented Category and populates the given category with its items.
         /// @param json JSON represented Categeory.
         /// @param category Category to populate with JSON data. 
-        friend void from_json(const nlohmann::json &json, Category& category);
+        friend void from_json(const nlohmann::json& json, Category& category);
 };
 
 #endif // CATEGORY_H

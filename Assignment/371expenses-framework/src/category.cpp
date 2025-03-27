@@ -32,7 +32,8 @@ const char ITEM_OUT_OF_RANGE[] = "item";
 
 /// @brief Constructor for category. 
 /// @param _ident Category identifier.
-Category::Category(const std::string &identifier) noexcept : ident(identifier), itemMap({}) {}
+Category::Category(const std::string& identifier) noexcept 
+    : ident(identifier), itemMap({}) {}
 
 // ------------------------------------------------
 //          Category Properties Functions
@@ -48,6 +49,10 @@ unsigned int Category::size() const noexcept {
     return itemMap.size();
 }
 
+// ------------------------------------------------
+//                        Ident
+// ------------------------------------------------
+
 // Example:
 //  Category cObj{"categoryIdent"};
 //  auto ident = cObj.getIdent();
@@ -58,17 +63,13 @@ std::string Category::getIdent() const noexcept {
     return this->ident;
 }
 
-// ------------------------------------------------
-//                     Setters
-// ------------------------------------------------
-
 // Example:
 //  Category cObj{"categoryIdent"};
 //  cObj.setIdent("categoryIdent2");
 
 /// @brief Updates the category identifier to a new identifier. 
 /// @param _ident New identifier for category.  
-void Category::setIdent(const std::string &identifier) noexcept {
+void Category::setIdent(const std::string& identifier) noexcept {
     this->ident = identifier;
 }
 
@@ -90,10 +91,10 @@ void Category::setIdent(const std::string &identifier) noexcept {
 /// @param date date of the new Item object. 
 /// @return Reference to the new Item object. 
 /// @throws std::runtime_error if the item could not be added for whatever reason.
-Item& Category::newItem(const std::string &identifier, 
-                        const std::string &description, 
-                        const double &amount,
-                        const Date &date) {
+Item& Category::newItem(const std::string& identifier, 
+                        const std::string& description, 
+                        const double& amount,
+                        const Date& date) {
     
         try {
             std::shared_ptr<Item> pNewItem(new Item(identifier, description, amount, date));
@@ -123,7 +124,7 @@ Item& Category::newItem(const std::string &identifier,
 /// amount and date of the new Item will be overwrite the exising item. 
 /// @param item item to be added
 /// @return True if the item was added, false if it was merged with an existing object. 
-bool Category::addItem(const Item &item) noexcept {
+bool Category::addItem(const Item& item) noexcept {
 
     auto it = itemMap.find(item.getIdent());
     const bool contains = (it != itemMap.end());
@@ -153,7 +154,7 @@ bool Category::addItem(const Item &item) noexcept {
 /// @return Reference to the Item only if it is in this Category. 
 /// @throws std::out_of_range exception if an Item with a matching identifier
 /// could not be found.
-Item& Category::getItem(const std::string identifier) const {
+Item& Category::getItem(const std::string& identifier) const {
     const auto result = itemMap.find(identifier);
 
     if (result == itemMap.cend()) {
@@ -193,7 +194,7 @@ double Category::getSum() const noexcept {
 /// @return True only if the item was deleted.
 /// @throws std::out_of_range exception if the Item with the given identifier
 /// could not be found in the category.
-bool Category::deleteItem(const std::string &identifier) {
+bool Category::deleteItem(const std::string& identifier) {
     auto it = itemMap.find(identifier);
     if (it == itemMap.end()) {
         throw std::out_of_range(ITEM_OUT_OF_RANGE);
@@ -207,7 +208,7 @@ bool Category::deleteItem(const std::string &identifier) {
 /// If this category already contains an item, it is merged/overwritten by the
 /// item. (see addItem)
 /// @param other Category with items to be added to this Category. 
-void Category::mergeItems(const Category &other) noexcept {
+void Category::mergeItems(const Category& other) noexcept {
     for (auto it = other.itemMap.cbegin(); 
               it != other.itemMap.cend();
               it ++ ) {
@@ -241,7 +242,7 @@ bool Category::containsItem(const std::string& itemIdent) const noexcept {
 /// @param lhs left hand side Category object. 
 /// @param rhs right hand side Category object. 
 /// @return True if the two categories have the same identifier and equal Items, otherwise false.
-bool operator==(const Category &lhs, const Category &rhs) noexcept {
+bool operator==(const Category& lhs, const Category& rhs) noexcept {
     if (lhs.ident != rhs.ident) return false;
 
     if (lhs.size() != rhs.size()) return false;
@@ -266,7 +267,7 @@ bool operator==(const Category &lhs, const Category &rhs) noexcept {
 /// @param lhs left hand side Category object. 
 /// @param rhs right hand side Category object. 
 /// @return True if the two categories do not have the same identifier and equal Items, otherwise false.
-bool operator!=(const Category &lhs, const Category &rhs) noexcept {
+bool operator!=(const Category& lhs, const Category& rhs) noexcept {
     return !(lhs == rhs);
 }
 
@@ -308,7 +309,7 @@ void to_json(nlohmann::json& json, const Category& category) noexcept {
 /// @brief Takes a JSON represented Category and populates the given category with its items.
 /// @param json JSON represented Categeory.
 /// @param category Category to populate with JSON data. 
-void from_json(const nlohmann::json &json, Category& category) {
+void from_json(const nlohmann::json& json, Category& category) {
     for (auto it = json.cbegin(); it != json.cend(); it++) {
 
         const nlohmann::json& jsonItem = it.value();
