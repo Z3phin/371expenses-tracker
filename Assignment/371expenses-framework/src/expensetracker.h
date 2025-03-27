@@ -49,7 +49,7 @@ class ExpenseTracker {
         /// @param categoryIdent identifier of new category.
         /// @return reference to new or already existing category.
         /// @throws std::runtime_error if adding the new Category was unsuccessful.
-        Category& newCategory(const std::string &categoryIdent);
+        Category& newCategory(const std::string& categoryIdent);
 
         /// @brief Adds the given Category object to the ExpenseTracker. If the ExpenseTracker 
         /// already contains a category with the same identifier, the contents of the given category
@@ -57,21 +57,21 @@ class ExpenseTracker {
         /// @param category category object to be added. 
         /// @return True if added successfully, otherwise false if merged. 
         /// @throws std::runtime_error exception if the operation was unsuccessful for some reason.
-        bool addCategory(const Category &category);  
+        bool addCategory(const Category& category);  
         
         /// @brief Returns the category with the given identifier only if it is in the 
         /// ExpenseTracker object. 
         /// @param categoryIdentifier category to be found  
         /// @return Reference to category object with matching identifier
         /// @throws std::out_of_range exception if the category is not in the ExpenseTracker
-        Category& getCategory(const std::string &categoryIdentifier) const;
+        Category& getCategory(const std::string& categoryIdentifier) const;
 
         /// @brief Deletes the Category with the given identifier from the ExpenseTracker object if it exists,
         /// otherwise an exception is thrown if the identifier could not be found. 
         /// @param categoryIdentifier identifier of category to be deleted.     
         /// @return True only if the Category was deleted. 
         /// @throws std::out_of_range exception if the given category identifier could not be found.
-        bool deleteCategory(const std::string &categoryIdentifier);
+        bool deleteCategory(const std::string& categoryIdentifier);
 
         /// @brief Returns the sum of all category expense sums, consisting of all individual 
         /// item amounts across all categories
@@ -86,11 +86,11 @@ class ExpenseTracker {
         /// with its categories and items.
         /// @param database JSON datbase filename.
         /// @throws exceptions may be thrown when parsing the JSON file (e.g. improper formatting)
-        void load(const std::string &database);
+        void load(const std::string& database);
 
         /// @brief Saves the ExpenseTracker object to the given file as JSON.
         /// @param filepath file for date to be saved to. 
-        void save(const std::string &filepath) const;
+        void save(const std::string& filepath) const;
 
         // ------------------------------------------------
         //               Operator Functions
@@ -101,14 +101,14 @@ class ExpenseTracker {
         /// @param lhs left hand side object.
         /// @param rhs right hand side object.
         /// @return True if the objects are equal, otherwise false.
-        friend bool operator==(const ExpenseTracker &lhs, const ExpenseTracker &rhs) noexcept;
+        friend bool operator==(const ExpenseTracker& lhs, const ExpenseTracker& rhs) noexcept;
 
         /// @brief Compares two ExpenseTracker objects. The two objects are not equal if they have
         /// differing data, i.e. different items or categories. 
         /// @param lhs left hand side object.
         /// @param rhs right hand side object.
         /// @return True if the objects are not equal, otherwise false.
-        friend bool operator!=(const ExpenseTracker &lhs, const ExpenseTracker &rhs) noexcept;
+        friend bool operator!=(const ExpenseTracker& lhs, const ExpenseTracker& rhs) noexcept;
 
         // ------------------------------------------------
         //               JSON Representation

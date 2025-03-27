@@ -66,7 +66,7 @@ unsigned int ExpenseTracker::size() const noexcept {
 /// @param categoryIdent identifier of new category.
 /// @return reference to new or already existing category. 
 /// @throws std::runtime_error if adding the new Category was unsuccessful.
-Category& ExpenseTracker::newCategory(const std::string &categoryIdent) {
+Category& ExpenseTracker::newCategory(const std::string& categoryIdent) {
     const auto it = categoryMap.find(categoryIdent);
     if (it != categoryMap.cend()) {
         return *(it->second);
@@ -93,7 +93,7 @@ Category& ExpenseTracker::newCategory(const std::string &categoryIdent) {
 /// @param category category object to be added. 
 /// @return True if added successfully, otherwise false if merged. 
 /// @throws std::runtime_error exception if the operation was unsuccessful for some reason.
-bool ExpenseTracker::addCategory(const Category &category) {
+bool ExpenseTracker::addCategory(const Category& category) {
     auto it = categoryMap.find(category.getIdent());
     if (it != categoryMap.end()) {
         it->second->mergeItems(category);
@@ -121,7 +121,7 @@ bool ExpenseTracker::addCategory(const Category &category) {
 /// @param categoryIdentifier category to be found  
 /// @return Reference to category object with matching identifier
 /// @throws std::out_of_range exception if the category is not in the ExpenseTracker
-Category& ExpenseTracker::getCategory(const std::string &categoryIdentifier) const {
+Category& ExpenseTracker::getCategory(const std::string& categoryIdentifier) const {
     const auto it = categoryMap.find(categoryIdentifier);
     if (it == categoryMap.cend()) {
         throw std::out_of_range(CATEGORY_OUT_OF_RANGE);
@@ -140,7 +140,7 @@ Category& ExpenseTracker::getCategory(const std::string &categoryIdentifier) con
 /// @param categoryIdentifier identifier of category to be deleted. 
 /// @return True only if the Category was deleted. 
 /// @throws std::out_of_range exception if the given category identifier could not be found. 
-bool ExpenseTracker::deleteCategory(const std::string &categoryIdentifier) {
+bool ExpenseTracker::deleteCategory(const std::string& categoryIdentifier) {
     const auto it = categoryMap.find(categoryIdentifier);
     if (it == categoryMap.cend()) {
         throw std::out_of_range(CATEGORY_OUT_OF_RANGE);
@@ -188,7 +188,7 @@ double ExpenseTracker::getSum() const noexcept {
 /// with its categories and items.
 /// @param database JSON datbase filename.
 /// @throws exceptions may be thrown when parsing the JSON file (e.g. improper formatting)
-void ExpenseTracker::load(const std::string &database) {
+void ExpenseTracker::load(const std::string& database) {
     std::ifstream inputFileStream;
     inputFileStream.open(database, std::ifstream::in);
 
@@ -210,7 +210,7 @@ void ExpenseTracker::load(const std::string &database) {
 
 /// @brief Saves the ExpenseTracker object to the given file as JSON.
 /// @param filepath file for date to be saved to. 
-void ExpenseTracker::save(const std::string &filepath) const {
+void ExpenseTracker::save(const std::string& filepath) const {
     std::ofstream output;
     output.open(filepath);
     if (!output.is_open()) {
@@ -238,7 +238,7 @@ void ExpenseTracker::save(const std::string &filepath) const {
 /// @param lhs left hand side object.
 /// @param rhs right hand side object.
 /// @return True if the objects are equal, otherwise false. 
-bool operator==(const ExpenseTracker &lhs, const ExpenseTracker &rhs) noexcept {
+bool operator==(const ExpenseTracker& lhs, const ExpenseTracker& rhs) noexcept {
     if (lhs.size() != rhs.size()) return false;
 
     // Check if each category in lhs is in rhs
@@ -260,7 +260,7 @@ bool operator==(const ExpenseTracker &lhs, const ExpenseTracker &rhs) noexcept {
 /// @param lhs left hand side object.
 /// @param rhs right hand side object.
 /// @return True if the objects are not equal, otherwise false.
-bool operator!=(const ExpenseTracker &lhs, const ExpenseTracker &rhs) noexcept {
+bool operator!=(const ExpenseTracker& lhs, const ExpenseTracker& rhs) noexcept {
     return !(lhs == rhs);
 }
 
