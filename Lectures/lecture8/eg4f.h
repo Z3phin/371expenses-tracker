@@ -1,1 +1,0 @@
-void multiplyBy2(int& value);
